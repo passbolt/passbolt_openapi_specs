@@ -1,0 +1,2 @@
+Passbolt OpenAPI Specs
+==
