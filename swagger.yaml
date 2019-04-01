@@ -3,24 +3,12 @@ swagger: '2.0'
 info:
   description: |
     
-    Authentication
+    Authentication in passbolt
     ==
-    This is how authentication works
-    
-    GPG
-    ---
-    Passbolt instead of a classic form based authentication perform a challenge based authentication based on OpenPGP keys set during the setup.
-
-    The aim of this document is to help explain how this authentication process works to facilitate review and discussions as well as future integration with other products.
-
-    Our goals were both to improve the security and usability of the overall solution, e.g. reuse the existing OpenPGP facilities of passbolt to avoid having the user remember another password than their passphrase.
-
-      
+    Passbolt API uses challenge based GPG authentication for authenticating the requests. As this is not something REST over HTTP(s) supports natively, you can authenticate yourself via a browser where the Passbolt extension is present. Once authenticated you can inject the "authenticated" cookie in your Request header to make the API calls.
     
     
-    Passwords
-    ==
-    @TODO Passwords description
+    The server keys are setup during installation and are used to encrypt and/or sign the request payload. Though a bit tricky, this method ensures identity verification for both the server and the client.
     
     Exceptions
     ==
@@ -39,6 +27,8 @@ info:
 host: "api.passbolt.com"
 basePath: "/"
 tags:
+- name: "Auth"
+  description: Authenticaion endpoints
 - name: "Resource"
   description: |
     Passwords are internally known as `Resources` and are represented as one object containing the `name`, `username`, the actual `password`, the `URL` amongst other fields. The API allows you to create, delete, and update your passwords. You can retrieve individual passwords as well as a list of all your passwords."
@@ -51,6 +41,80 @@ tags:
 schemes:
 - "https"
 paths:
+  "/auth/verify.json":
+    get:
+      summary: "Fetches server's identity for verification"
+      description: "Returns server's public key with it's fingerprint. This is to be verified against the saved server identity."
+      
+      tags:
+      - "Auth"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              header:
+                $ref: '#/definitions/ApiResponseHeader'
+              body:
+                type: object
+                properties:
+                  fingerprint:
+                    type: string
+                  keydata:
+                    type: string
+                    description: Server's PGP encrypted public key
+  
+  "/auth/login.json":
+    post:
+      summary: Logs a user in
+      description: |
+        The same URL works for two login steps. The server recognises the step from the request payload and headers.
+        
+        Step 1. Encrypts a random string using server's public key and send to the server as request body in `server_verify_token`
+        
+        Step 2. After verification, the server responds back with a random token encrypted using client's public key in the header called `X-GPGAuth-User-Auth-Token`. 
+        
+        Step 3. Client then decrypts and sends the decrypted text in the request body in `user_token_result`.
+        
+        Step 4. Finally, the server verifies if the decrypted `user_token_result` matches with the original text and is still valid. Upon verification the server creates and returns "authenticated" cookies that can be used to make further requests.
+        
+        To know more about Passbolt's authentication. Please visit https://help.passbolt.com/tech/auth
+      tags:
+      - "Auth"
+      parameters:
+        - name: api-version
+          in: query
+          description: API Version to target for this request
+          type: string
+          default: "v1"
+          enum: [v1, v2]
+        - in: body
+          name: auth
+          schema:
+            type: object
+            required: 
+              - gpg_auth
+            properties:
+              gpg_auth:
+                type: object
+                properties:
+                  keyid:
+                    type: string
+                    description: Fingerprint of the user's 
+                    example: "252B91CB28A96C6D67E8FC139020576F08D8B763"
+                  server_verify_token:
+                    type: string
+                    description: Token encrypted by the client using server's public key. This acts as a challenge that the server must solve to confirm it\'s integrity.
+                  user_token_result:
+                    type: string
+                    description: Plaintext string that was decrypted using client's private key.
+          
+      responses:
+        200:
+          description: OK
+    
+    
   "/resources.json":
     get:
       description: Returns a list of your passwords. The passwords are returned sorted alphabetically by their name.
