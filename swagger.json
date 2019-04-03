@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "\nAuthentication in passbolt\n==\nPassbolt API uses challenge based GPG authentication for authenticating the requests. As this is not something REST over HTTP(s) supports natively, you can authenticate yourself via a browser where the Passbolt extension is present. Once authenticated you can inject the \"authenticated\" cookie in your Request header to make the API calls.\n\n\nThe server keys are setup during installation and are used to encrypt and/or sign the request payload. Though a bit tricky, this method ensures identity verification for both the server and the client.\n\nExceptions\n==\n@TODO\n",
+    "description": "This document describes Passbolt Backend REST APIs. They work over HTTPS so they are language/framework agnostic. Clients can consume them in their language of choice using the HTTPS protocol.\n",
     "version": "2.7.1",
     "title": "Passbolt API Reference",
     "termsOfService": "https://www.passbolt.com/terms",
@@ -18,7 +18,7 @@
   "tags": [
     {
       "name": "Auth",
-      "description": "Authenticaion endpoints"
+      "description": "Authentication endpoints"
     },
     {
       "name": "Resource",
@@ -249,7 +249,7 @@
             }
           },
           "403": {
-            "description": "Authenticaion failure.\n--\nWhen the user making the request is not authenticated\n"
+            "description": "Authentication failure.\n--\nWhen the user making the request is not authenticated\n"
           }
         },
         "security": [
@@ -639,7 +639,7 @@
             }
           },
           "403": {
-            "description": "Authenticaion failure.\n--\nWhen the user making the request is not authenticated\n"
+            "description": "Authentication failure.\n--\nWhen the user making the request is not authenticated\n"
           }
         },
         "security": [
@@ -1058,7 +1058,7 @@
             }
           },
           "403": {
-            "description": "Authenticaion failure.\n--\nWhen the group making the request is not authenticated\n"
+            "description": "Authentication failure.\n--\nWhen the group making the request is not authenticated\n"
           }
         },
         "security": [
@@ -1239,38 +1239,32 @@
             "format": "uuid"
           },
           {
-            "name": "group",
             "in": "body",
-            "description": "Group data to update",
-            "required": true,
+            "name": "group",
             "schema": {
               "type": "object",
+              "required": [
+                "name",
+                "group_users"
+              ],
               "properties": {
-                "description": {
-                  "type": "string"
-                },
                 "name": {
                   "type": "string"
                 },
-                "secrets": {
+                "group_users": {
                   "type": "array",
                   "items": {
                     "type": "object",
                     "properties": {
-                      "group_id": {
+                      "user_id": {
                         "type": "string",
                         "format": "uuid"
                       },
-                      "data": {
-                        "type": "string",
-                        "description": "Encrypted group string"
+                      "is_admin": {
+                        "type": "boolean"
                       }
                     }
                   }
-                },
-                "uri": {
-                  "type": "string",
-                  "format": "url"
                 }
               }
             }
@@ -1278,7 +1272,18 @@
         ],
         "responses": {
           "200": {
-            "description": "OK\n--\n"
+            "description": "OK\n--\n",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "header": {
+                  "$ref": "#/definitions/ApiResponseHeader"
+                },
+                "body": {
+                  "$ref": "#/definitions/Group"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request\n--\nSome required parameters are missing\n"
@@ -2619,6 +2624,36 @@
         "modified_by": {
           "type": "string",
           "format": "uuid"
+        },
+        "groups_users": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "user_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "group_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "created": {
+                "type": "string",
+                "format": "datetime"
+              },
+              "is_admin": {
+                "type": "boolean"
+              },
+              "user": {
+                "$ref": "#/definitions/UserFull"
+              }
+            }
+          }
         }
       }
     },
