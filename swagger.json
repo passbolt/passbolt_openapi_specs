@@ -1,9 +1,9 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "This document describes Passbolt Backend REST APIs. They work over HTTPS so they are language/framework agnostic. Clients can consume them in their language of choice using the HTTPS protocol.\n",
+    "description": "This document describes passbolt backend REST APIs. They work over HTTPS so they are language/framework agnostic. Clients can consume them in their language of choice using the HTTPS protocol.\n",
     "version": "2.7.1",
-    "title": "Passbolt API Reference",
+    "title": "passbolt API Reference",
     "termsOfService": "https://www.passbolt.com/terms",
     "contact": {
       "email": "contact@passbolt.com"
@@ -13,7 +13,7 @@
       "url": "http://www.gnu.org/licenses/agpl-3.0.html"
     }
   },
-  "host": "api.passbolt.com",
+  "host": "www.passbolt.com",
   "basePath": "/",
   "tags": [
     {
@@ -22,11 +22,11 @@
     },
     {
       "name": "Resource",
-      "description": "Passwords are internally known as `Resources` and are represented as one object containing the `name`, `username`, the actual `password`, the `URL` amongst other fields. The API allows you to create, delete, and update your passwords. You can retrieve individual passwords as well as a list of all your passwords.\"\n"
+      "description": "In passbolt, passwords are split into two different entities: Resources and Secrets. Passwords metadata are internally known as `Resources` and are represented as one object containing the name, username, the URL amongst other fields. While the actual password is part of the `Secrets` entity. The API allows you to create, delete, and update your passwords. You can retrieve individual passwords as well as a list of all your passwords.\n"
     },
     {
       "name": "User",
-      "description": "Users are usually people interacting with your account. One `User` object represent one person with their `Profile`, `Avatar` etc.\n"
+      "description": "User are entities with the ability to interact with the passbolt backend with their unique username and passwords. They are usually represented by one person. The User object returned by the API hence contains the relevant associated fields like `gpgkey`, `profile`, `role` etc.\n"
     },
     {
       "name": "Group",
@@ -40,7 +40,7 @@
     "/auth/verify.json": {
       "get": {
         "summary": "Fetches server's identity for verification",
-        "description": "Returns server's public key with it's fingerprint. This is to be verified against the saved server identity.",
+        "description": "Returns server's public key with it's fingerprint. Useful when you want to send sensitive data to the server from a client. The sensitive data needs to be encrypted using this public key.\n",
         "tags": [
           "Auth"
         ],
@@ -153,7 +153,7 @@
           },
           {
             "name": "contain",
-            "description": "Fields that must be included in the response. Takes a comma seperated list.",
+            "description": "Fields that must be included in the response. Takes a comma separated list.",
             "in": "query",
             "type": "array",
             "collectionFormat": "csv",
@@ -265,8 +265,8 @@
         "tags": [
           "Resource"
         ],
-        "summary": "Creates a new passowrd.",
-        "description": "Creates a new password.",
+        "summary": "Creates a new Resource.",
+        "description": "Creates a new Resource with metadata and secrets.",
         "consumes": [
           "application/json"
         ],
@@ -297,7 +297,7 @@
                 },
                 "description": {
                   "type": "string",
-                  "description": "More detailed description of the passowrd."
+                  "description": "Description of the Resource."
                 },
                 "uri": {
                   "type": "string",
@@ -368,7 +368,7 @@
           {
             "name": "resourceId",
             "in": "path",
-            "description": "ID of the password to return",
+            "description": "ID of the Resource to return",
             "required": true,
             "type": "string",
             "format": "uuid"
@@ -534,7 +534,7 @@
             "description": "Bad Request\n--\nWhen `resourceId` is not a valid `UUID`\n"
           },
           "404": {
-            "description": "Not Found\n--\nWhen either of the following is true\n- The `resourceId` does not exist.\n- The Password is already deleted.\n- If the user does not have access to the resource.\n- If the user does not have the permission to delete the resource.\n"
+            "description": "Not Found\n--\nWhen either of the following is true\n- The `resourceId` does not exist.\n- The Resource is already deleted.\n- If the user does not have access to the Resource.\n- If the user does not have permission to delete the Resource.\n"
           },
           "500": {
             "description": "Server Error\n--\nif the resource could not be deleted for other reasons\n"
@@ -574,7 +574,7 @@
           },
           {
             "name": "contain",
-            "description": "Fields that must be included in the response. Takes a comma seperated list.",
+            "description": "Fields that must be included in the response. Takes a comma separated list.",
             "in": "query",
             "type": "array",
             "collectionFormat": "csv",
@@ -936,7 +936,7 @@
           "User"
         ],
         "summary": "Checks if a user can be deleted",
-        "description": "Useful when you want to check and avoid any side effects of deleting a user.",
+        "description": "A User can not be deleted if \n* it's the sole owner of a shared Resource or\n* it's the sole manager of a Group or\n* it's the sole manager of a Group that is the sole owner of a shared Resource\n\nThis endpoint is useful when you want to check and avoid any side effects of deleting a user.\n",
         "parameters": [
           {
             "name": "api-version",
@@ -960,7 +960,10 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK\n--\nThe User can be deleted safely\n"
+          },
+          "400": {
+            "description": "Bad Request\n--\nSome of the validation checks failed. The User can not be deleted safely.\n"
           }
         },
         "security": [
@@ -997,7 +1000,7 @@
           },
           {
             "name": "contain",
-            "description": "Fields that must be included in the response. Takes a comma seperated list.",
+            "description": "Fields that must be included in the response. Takes a comma separated list.",
             "in": "query",
             "type": "array",
             "collectionFormat": "csv",
@@ -1310,7 +1313,7 @@
         "produces": [
           "application/json"
         ],
-        "description": "Deletes the group and also drops all the associated permissions.\n",
+        "description": "Deletes the Group and also all the Resources that belong only to this group.\n",
         "parameters": [
           {
             "name": "api-version",
@@ -1340,10 +1343,104 @@
             "description": "Bad Request\n--\nWhen `groupId` is not a valid `UUID`\n"
           },
           "404": {
-            "description": "Not Found\n--\nWhen either of the following is true\n- The `groupId` does not exist.\n- The Group is already deleted.\n- If the group does not have access to the group.\n- If the group does not have the permission to delete the group.\n"
+            "description": "Not Found\n--\nWhen either of the following is true\n- The `groupId` does not exist.\n- The Group is already deleted.\n- If the user is neither a Group manager nor Admin.\n"
           },
           "500": {
             "description": "Server Error\n--\nif the group could not be deleted for other reasons\n"
+          }
+        },
+        "security": [
+          {
+            "passbolt_auth": [
+              "delete:group"
+            ]
+          }
+        ]
+      }
+    },
+    "/groups/{groupId}/dry-run": {
+      "put": {
+        "tags": [
+          "Group"
+        ],
+        "summary": "Checks if a group can be updated.",
+        "description": "The endpoint performs all the validation checks required for a Group update. This is useful to determine if it's safe to update a Group. It returns a success response if the Group can be updated, on validation failures, the response will have the reason and suggestions for the failed checks.\n",
+        "parameters": [
+          {
+            "name": "api-version",
+            "in": "query",
+            "description": "API Version to target for this request",
+            "type": "string",
+            "default": "v1",
+            "enum": [
+              "v1",
+              "v2"
+            ]
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "description": "Group id to check for update.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK\n--\nThe group can be updated safely\n"
+          },
+          "400": {
+            "description": "Bad Request\n--\nIf `groupId` is not a valid UUID.\n"
+          },
+          "403": {
+            "description": "Forbidden\n--\nIf the user making the request is neither the Group manager nor an Admin.\n"
+          },
+          "404": {
+            "description": "Not Found\n--\n* No Group found for the given `groupId` or\n* The Group has been deleted.\n"
+          }
+        },
+        "security": [
+          {
+            "passbolt_auth": [
+              "write:group"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Group"
+        ],
+        "summary": "Checks if a group can be deleted",
+        "description": "A Group can not be deleted if it's the sole owner of a Resource. This endpoint is useful when you want to check and avoid any side effects of deleting a group.",
+        "parameters": [
+          {
+            "name": "api-version",
+            "in": "query",
+            "description": "API Version to target for this request",
+            "type": "string",
+            "default": "v1",
+            "enum": [
+              "v1",
+              "v2"
+            ]
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "description": "Group id to check for deletion",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK\n--\nThe Group can be deleted safely.\n"
+          },
+          "400": {
+            "description": "Bad Request\n--\nThe Group is the sole owner of a Resource and hence can not be deleted.\n"
           }
         },
         "security": [
@@ -1442,7 +1539,7 @@
           "Share"
         ],
         "summary": "Simulates sharing a password.",
-        "description": "Simulates sharing a resource with a user and/or group. Usefull for avoiding any side effects and checking the possible errors.\n",
+        "description": "Simulates sharing a resource with a user and/or group. Useful for avoiding any side effects and checking the possible errors.\n",
         "operationId": "simulateShare",
         "consumes": [
           "application/json"
@@ -1876,7 +1973,7 @@
               "properties": {
                 "content": {
                   "type": "string",
-                  "description": "The comment content to pos"
+                  "description": "The comment text"
                 }
               }
             }
@@ -2051,7 +2148,7 @@
         "tags": [
           "GPG Key"
         ],
-        "summary": "List all the GPG kyes",
+        "summary": "List all the GPG keys",
         "description": "Fetches a list of all your GPG keys",
         "parameters": [
           {
@@ -2379,7 +2476,7 @@
         "tags": [
           "Health Check"
         ],
-        "summary": "Perform a healthcheck",
+        "summary": "Perform a health check",
         "description": "Return server status report",
         "parameters": [
           {
@@ -2446,7 +2543,7 @@
         "tags": [
           "Health Check"
         ],
-        "summary": "Get the healthcheck status",
+        "summary": "Get the health check status",
         "description": "Return server status",
         "parameters": [
           {
@@ -2498,19 +2595,19 @@
         "write:resource": "modify password in your account",
         "read:resource": "read your passwords",
         "share:resource": "share your passwords",
-        "write:user": "modify user in your account",
-        "read:user": "read your users",
-        "delete:user": "delete your users",
-        "read:group": "read your groups",
-        "write:group": "modifiy your groups",
-        "delete:group": "delete your groups",
+        "write:user": "modify users",
+        "read:user": "read users",
+        "delete:user": "delete users",
+        "read:group": "read groups",
+        "write:group": "write groups",
+        "delete:group": "delete groups",
         "read:comment": "read your comments",
         "write:comment": "write your comments",
         "read:gpgkey": "read your gpg keys",
         "read:secret": "read your resource secret",
         "read:settings": "read your settings",
         "read:role": "read your roles",
-        "read:healthcheck": "read your healthcheck status"
+        "read:healthcheck": "read your health check status"
       }
     }
   },
@@ -2692,7 +2789,7 @@
       }
     },
     "Resource": {
-      "description": "`Resource` bjects allow you to perform recurring charges, and to track multiple charges, that are associated with the same customer.\n\nThe API allows you to create, delete, and update your customers. \n\nYou can retrieve individual customers as well as a list of all your customers.\n",
+      "description": "`Resource` objects allow you to perform recurring charges, and to track multiple charges, that are associated with the same customer.\n\nThe API allows you to create, delete, and update your customers. \n\nYou can retrieve individual customers as well as a list of all your customers.\n",
       "type": "object",
       "properties": {
         "id": {
