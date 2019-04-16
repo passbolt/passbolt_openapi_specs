@@ -49,7 +49,10 @@
         plugins: [
           SwaggerUIBundle.plugins.DownloadUrl
         ],
-        layout: "StandaloneLayout"
+        layout: "StandaloneLayout",
+
+        // Disable "Try it out" for all methods
+        supportedSubmitMethods: [], 
       })
       // End Swagger UI call region
 
