@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "description": "This document describes passbolt backend REST APIs. They work over HTTPS so they are language/framework agnostic. Clients can consume them in their language of choice using the HTTPS protocol.\n",
-    "version": "2.7.1",
+    "version": "2.8.3",
     "title": "passbolt API Reference",
     "termsOfService": "https://www.passbolt.com/terms",
     "contact": {
