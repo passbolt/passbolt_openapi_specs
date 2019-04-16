@@ -1,48 +1,46 @@
 swagger: '2.0'
-
 info:
   description: |
     This document describes passbolt backend REST APIs. They work over HTTPS so they are language/framework agnostic. Clients can consume them in their language of choice using the HTTPS protocol.
+<<<<<<< HEAD
   version: "2.8.3"
   title: "passbolt API Reference"
   termsOfService: "https://www.passbolt.com/terms"
+=======
+  version: 2.8.3
+  title: passbolt API Reference
+  termsOfService: 'https://www.passbolt.com/terms'
+>>>>>>> develop
   contact:
-    email: "contact@passbolt.com"
+    email: contact@passbolt.com
   license:
-    name: "AGPL-3.0"
-    url: "http://www.gnu.org/licenses/agpl-3.0.html"
-
-host: "www.passbolt.com"
-
-basePath: "/"
-
+    name: AGPL-3.0
+    url: 'http://www.gnu.org/licenses/agpl-3.0.html'
+host: www.passbolt.com
+basePath: /
 tags:
-- name: "Auth"
-  description: Authentication endpoints
-
-- name: "Resource"
-  description: |
-    In passbolt, passwords are split into two different entities: Resources and Secrets. Passwords metadata are internally known as `Resources` and are represented as one object containing the name, username, the URL amongst other fields. While the actual password is part of the `Secrets` entity. The API allows you to create, delete, and update your passwords. You can retrieve individual passwords as well as a list of all your passwords.
-    
-- name: "User"
-  description: |
-    User are entities with the ability to interact with the passbolt backend with their unique username and passwords. They are usually represented by one person. The User object returned by the API hence contains the relevant associated fields like `gpgkey`, `profile`, `role` etc.
-    
-- name: "Group"
-  description: Group of users
-
+  - name: Auth
+    description: Authentication endpoints
+  - name: Resource
+    description: |
+      In passbolt, passwords are split into two different entities: Resources and Secrets. Passwords metadata are internally known as `Resources` and are represented as one object containing the name, username, the URL amongst other fields. While the actual password is part of the `Secrets` entity. The API allows you to create, delete, and update your passwords. You can retrieve individual passwords as well as a list of all your passwords.
+  - name: User
+    description: |
+      User are entities with the ability to interact with the passbolt backend with their unique username and passwords. They are usually represented by one person. The User object returned by the API hence contains the relevant associated fields like `gpgkey`, `profile`, `role` etc.
+  - name: Group
+    description: Group of users
 schemes:
-- "https"
+  - https
 paths:
-  "/auth/verify.json":
+  /auth/verify.json:
     get:
-      summary: "Fetches server's identity for verification"
+      summary: Fetches server's identity for verification
       description: |
         Returns server's public key with it's fingerprint. Useful when you want to send sensitive data to the server from a client. The sensitive data needs to be encrypted using this public key.
       tags:
-      - "Auth"
+        - Auth
       responses:
-        200:
+        '200':
           description: OK
           schema:
             type: object
@@ -57,36 +55,37 @@ paths:
                   keydata:
                     type: string
                     description: Server's PGP encrypted public key
-  
-  "/auth/login.json":
+  /auth/login.json:
     post:
       summary: Logs a user in
       description: |
         The same URL works for two login steps. The server recognises the step from the request payload and headers.
-        
+
         Step 1. Encrypts a random string using server's public key and send to the server as request body in `server_verify_token`
-        
+
         Step 2. After verification, the server responds back with a random token encrypted using client's public key in the header called `X-GPGAuth-User-Auth-Token`. 
-        
+
         Step 3. Client then decrypts and sends the decrypted text in the request body in `user_token_result`.
-        
+
         Step 4. Finally, the server verifies if the decrypted `user_token_result` matches with the original text and is still valid. Upon verification the server creates and returns "authenticated" cookies that can be used to make further requests.
-        
+
         To know more about Passbolt's authentication. Please visit https://help.passbolt.com/tech/auth
       tags:
-      - "Auth"
+        - Auth
       parameters:
         - name: api-version
           in: query
           description: API Version to target for this request
           type: string
-          default: "v1"
-          enum: [v1, v2]
+          default: v1
+          enum:
+            - v1
+            - v2
         - in: body
           name: auth
           schema:
             type: object
-            required: 
+            required:
               - gpg_auth
             properties:
               gpg_auth:
@@ -94,36 +93,35 @@ paths:
                 properties:
                   keyid:
                     type: string
-                    description: Fingerprint of the user's 
-                    example: "252B91CB28A96C6D67E8FC139020576F08D8B763"
+                    description: Fingerprint of the user's
+                    example: 252B91CB28A96C6D67E8FC139020576F08D8B763
                   server_verify_token:
                     type: string
                     description: Token encrypted by the client using server's public key. This acts as a challenge that the server must solve to confirm it\'s integrity.
                   user_token_result:
                     type: string
                     description: Plaintext string that was decrypted using client's private key.
-          
       responses:
-        200:
+        '200':
           description: OK
-    
-    
-  "/resources.json":
+  /resources.json:
     get:
       description: Returns a list of your passwords. The passwords are returned sorted alphabetically by their name.
       summary: List all Passwords
-      operationId: "getPasswords"
-      tags: 
-      - "Resource"
+      operationId: getPasswords
+      tags:
+        - Resource
       produces:
         - application/json
-      parameters: 
+      parameters:
         - name: api-version
           in: query
           description: API Version to target for this request
           type: string
-          default: "v1"
-          enum: [v1, v2]
+          default: v1
+          enum:
+            - v1
+            - v2
         - name: contain
           description: Fields that must be included in the response. Takes a comma separated list.
           in: query
@@ -131,14 +129,26 @@ paths:
           collectionFormat: csv
           items:
             type: string
-            enum: ['creator', 'favorite', 'modifier', 'permission', 'permissions.user.profile', 'permissions.group', 'secret']
+            enum:
+              - creator
+              - favorite
+              - modifier
+              - permission
+              - permissions.user.profile
+              - permissions.group
+              - secret
         - name: filter
           in: query
           type: array
           collectionFormat: csv
           items:
             type: string
-            enum: ['is-favorite', 'is-shared-with-group', 'is-owned-by-me', 'is-shared-with-me', 'has-id']
+            enum:
+              - is-favorite
+              - is-shared-with-group
+              - is-owned-by-me
+              - is-shared-with-me
+              - has-id
         - name: order
           in: query
           description: How the result list should be sorted.
@@ -146,10 +156,14 @@ paths:
           collectionFormat: csv
           items:
             type: string
-            enum: ['is-favorite', 'is-shared-with-group', 'is-owned-by-me', 'is-shared-with-me', 'has-id']
-        
+            enum:
+              - is-favorite
+              - is-shared-with-group
+              - is-owned-by-me
+              - is-shared-with-me
+              - has-id
       responses:
-        200:
+        '200':
           description: OK
           schema:
             type: object
@@ -158,38 +172,36 @@ paths:
                 type: object
                 properties:
                   id:
-                    type: "string"
-                    format: "uuid"
+                    type: string
+                    format: uuid
                   code:
                     type: integer
                   message:
-                    type: "string"
+                    type: string
                   servertime:
-                    type: "integer"
-                    format: "timestamp"
+                    type: integer
+                    format: timestamp
                   status:
-                    type: "string"
+                    type: string
                   title:
-                    type: "string"
+                    type: string
                   url:
-                    type: "string"
-                    format: "url"
+                    type: string
+                    format: url
               body:
                 type: array
                 items:
-                  $ref: "#/definitions/Resource"
-        403:
+                  $ref: '#/definitions/Resource'
+        '403':
           description: |
             Authentication failure.
             --
             When the user making the request is not authenticated
-      security:
-      - passbolt_auth:
-        - "read:resource"
+      
     post:
-      operationId: "createPassword"
-      tags: 
-      - "Resource"
+      operationId: createPassword
+      tags:
+        - Resource
       summary: Creates a new Resource.
       description: Creates a new Resource with metadata and secrets.
       consumes:
@@ -199,13 +211,15 @@ paths:
           in: query
           description: API Version to target for this request
           type: string
-          default: "v1"
-          enum: [v1, v2]
+          default: v1
+          enum:
+            - v1
+            - v2
         - in: body
           name: resource
           schema:
             type: object
-            required: 
+            required:
               - name
               - secrets
             properties:
@@ -228,46 +242,45 @@ paths:
                       type: string
                       description: Encrypted password string
       responses:
-        200:
+        '200':
           description: |
             OK
             --
-        400:
+        '400':
           description: |
             Bad Request
             --
-        403:
+        '403':
           description: |
             Forbidden
             --
-      security:
-      - passbolt_auth:
-        - "write:resource"
-  
-  "/resources/{resourceId}.json":  
+      
+  '/resources/{resourceId}.json':
     get:
-      operationId: "getPassword"
-      tags: 
-      - "Resource"
-      summary: "Find password by ID"
-      description: "Returns a single password"
+      operationId: getPassword
+      tags:
+        - Resource
+      summary: Find password by ID
+      description: Returns a single password
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - name: api-version
-        in: query
-        description: API Version to target for this request
-        type: string
-        default: "v1"
-        enum: [v1, v2]
-      - name: "resourceId"
-        in: "path"
-        description: "ID of the Resource to return"
-        required: true
-        type: "string"
-        format: "uuid"
+        - name: api-version
+          in: query
+          description: API Version to target for this request
+          type: string
+          default: v1
+          enum:
+            - v1
+            - v2
+        - name: resourceId
+          in: path
+          description: ID of the Resource to return
+          required: true
+          type: string
+          format: uuid
       responses:
-        200:
+        '200':
           description: |
             OK
             --
@@ -278,128 +291,125 @@ paths:
                 $ref: '#/definitions/ApiResponseHeader'
               body:
                 $ref: '#/definitions/Resource'
-        400:
+        '400':
           description: |
             Bad Request
             --
             The `resourceId` is not valid.
-        404:
+        '404':
           description: |
             Not Found
             --
             When either of the following is true
              - A password with the given `resourceId` does not exist.
              - The current user does not have `READ` permission on the password
-      security:
-      - passbolt_auth:
-        - "write:resource"
+      
     put:
-      tags: 
-      - "Resource"
-      summary: "Update an existing password"
+      tags:
+        - Resource
+      summary: Update an existing password
       description: |
         Updates the specified password by setting the values of the parameters passed. Any parameters not provided will be left unchanged.  
           
           This request accepts mostly the same arguments as the `Password` creation call.
-      operationId: "updatePassword"
+      operationId: updatePassword
       consumes:
-      - "application/json"
+        - application/json
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - name: api-version
-        in: query
-        description: API Version to target for this request
-        type: string
-        default: "v1"
-        enum: [v1, v2]
-      - name: "resourceId"
-        in: "path"
-        description: "ID of the password to update"
-        required: true
-        type: "string"
-        format: "uuid"
-      - name: "resource"
-        in: "body"
-        description: "Password data to update"
-        required: true
-        schema:
-          type: object
-          properties:
-            description:
-              type: string
-            name:
-              type: string
-            secrets:
-              type: array
-              items:
-                type: object
-                properties:
-                  user_id:
-                    type: string
-                    format: uuid
-                  data:
-                    type: string
-                    description: Encrypted password string
-            uri:
-              type: string
-              format: url
-        
+        - name: api-version
+          in: query
+          description: API Version to target for this request
+          type: string
+          default: v1
+          enum:
+            - v1
+            - v2
+        - name: resourceId
+          in: path
+          description: ID of the password to update
+          required: true
+          type: string
+          format: uuid
+        - name: resource
+          in: body
+          description: Password data to update
+          required: true
+          schema:
+            type: object
+            properties:
+              description:
+                type: string
+              name:
+                type: string
+              secrets:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    user_id:
+                      type: string
+                      format: uuid
+                    data:
+                      type: string
+                      description: Encrypted password string
+              uri:
+                type: string
+                format: url
       responses:
-        200:
+        '200':
           description: |
             OK
             --
-        
-        400:
+        '400':
           description: |
             Bad Request
             --
             Some required parameters are missing
-        404:
+        '404':
           description: |
             Not Found
             --
             When either of the following is true
              - A password with the given `resourceId` does not exist
              - The current user does not have sufficient permission on the password
-      security:
-      - passbolt_auth:
-        - "write:resource"
-        - "read:resource"
+      
     delete:
-      operationId: "deletePassword"
-      tags: 
-      - "Resource"
-      summary: "Deletes a password"
+      operationId: deletePassword
+      tags:
+        - Resource
+      summary: Deletes a password
       produces:
-      - "application/json"
+        - application/json
       description: |
         Deletes the password and also drops all the associated permissions.
       parameters:
-      - name: api-version
-        in: query
-        description: API Version to target for this request
-        type: string
-        default: "v1"
-        enum: [v1, v2]
-      - name: "resourceId"
-        in: "path"
-        description: "Password id to delete"
-        required: true
-        type: "string"
-        format: "uuid"
+        - name: api-version
+          in: query
+          description: API Version to target for this request
+          type: string
+          default: v1
+          enum:
+            - v1
+            - v2
+        - name: resourceId
+          in: path
+          description: Password id to delete
+          required: true
+          type: string
+          format: uuid
       responses:
-        200:
+        '200':
           description: |
             OK
             --
-        400:
+        '400':
           description: |
             Bad Request
             --
             When `resourceId` is not a valid `UUID`
-        404:
+        '404':
           description: |
             Not Found
             --
@@ -408,31 +418,30 @@ paths:
             - The Resource is already deleted.
             - If the user does not have access to the Resource.
             - If the user does not have permission to delete the Resource.
-        500:
+        '500':
           description: |
             Server Error
             --
             if the resource could not be deleted for other reasons
-      security:
-        - passbolt_auth:
-          - "read:resource"
-          
-  "/users.json":
+      
+  /users.json:
     get:
       description: Returns a list of your users. The users are returned sorted alphabetically by their name.
       summary: List all users
-      operationId: "getUsers"
-      tags: 
-      - "User"
+      operationId: getUsers
+      tags:
+        - User
       produces:
         - application/json
-      parameters: 
+      parameters:
         - name: api-version
           in: query
           description: API Version to target for this request
           type: string
-          default: "v1"
-          enum: [v1, v2]
+          default: v1
+          enum:
+            - v1
+            - v2
         - name: contain
           description: Fields that must be included in the response. Takes a comma separated list.
           in: query
@@ -440,14 +449,19 @@ paths:
           collectionFormat: csv
           items:
             type: string
-            enum: ['LastLoggedIn']
+            enum:
+              - LastLoggedIn
         - name: filter
           in: query
           type: array
           collectionFormat: csv
           items:
             type: string
-            enum: ['search', 'has-groups', 'has-access', 'is-admin']
+            enum:
+              - search
+              - has-groups
+              - has-access
+              - is-admin
         - name: order
           in: query
           description: How the result list should be sorted.
@@ -455,10 +469,16 @@ paths:
           collectionFormat: csv
           items:
             type: string
-            enum: ['User.username', 'User.created', 'User.modified','Profile.first_name', 'Profile.last_name', 'Profile.created', 'Profile.modified']
-        
+            enum:
+              - User.username
+              - User.created
+              - User.modified
+              - Profile.first_name
+              - Profile.last_name
+              - Profile.created
+              - Profile.modified
       responses:
-        200:
+        '200':
           description: OK
           schema:
             type: object
@@ -468,20 +488,17 @@ paths:
               body:
                 type: array
                 items:
-                  $ref: "#/definitions/UserFull"
-        403:
+                  $ref: '#/definitions/UserFull'
+        '403':
           description: |
             Authentication failure.
             --
             When the user making the request is not authenticated
-      security:
-      - passbolt_auth:
-        - "read:user"
-    
+      
     post:
-      operationId: "createUser"
-      tags: 
-      - "User"
+      operationId: createUser
+      tags:
+        - User
       summary: Creates a new user.
       description: Creates a new user.
       consumes:
@@ -491,13 +508,15 @@ paths:
           in: query
           description: API Version to target for this request
           type: string
-          default: "v1"
-          enum: [v1, v2]
+          default: v1
+          enum:
+            - v1
+            - v2
         - in: body
           name: user
           schema:
             type: object
-            required: 
+            required:
               - first_name
               - last_name
               - username
@@ -515,46 +534,45 @@ paths:
               is_admin:
                 type: boolean
       responses:
-        200:
+        '200':
           description: |
             OK
             --
-        400:
+        '400':
           description: |
             Bad Request
             --
-        403:
+        '403':
           description: |
             Forbidden
             --
-      security:
-      - passbolt_auth:
-        - "write:user"
-    
-  "/users/{userId}.json":  
+      
+  '/users/{userId}.json':
     get:
-      operationId: "getUser"
-      tags: 
-      - "User"
-      summary: "Find user by ID"
-      description: "Returns a single user"
+      operationId: getUser
+      tags:
+        - User
+      summary: Find user by ID
+      description: Returns a single user
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - name: api-version
-        in: query
-        description: API Version to target for this request
-        type: string
-        default: "v1"
-        enum: [v1, v2]
-      - name: "userId"
-        in: "path"
-        description: "ID of the user to return"
-        required: true
-        type: "string"
-        format: "uuid"
+        - name: api-version
+          in: query
+          description: API Version to target for this request
+          type: string
+          default: v1
+          enum:
+            - v1
+            - v2
+        - name: userId
+          in: path
+          description: ID of the user to return
+          required: true
+          type: string
+          format: uuid
       responses:
-        200:
+        '200':
           description: |
             OK
             --
@@ -565,128 +583,125 @@ paths:
                 $ref: '#/definitions/ApiResponseHeader'
               body:
                 $ref: '#/definitions/User'
-        400:
+        '400':
           description: |
             Bad Request
             --
             The `userId` is not valid.
-        404:
+        '404':
           description: |
             Not Found
             --
             When either of the following is true
              - A user with the given `userId` does not exist.
              - The current user does not have `READ` permission on the user
-      security:
-      - passbolt_auth:
-        - "write:user"
+      
     put:
-      tags: 
-      - "User"
-      summary: "Update an existing user"
+      tags:
+        - User
+      summary: Update an existing user
       description: |
         Updates the specified user by setting the values of the parameters passed. Any parameters not provided will be left unchanged.  
           
           This request accepts mostly the same arguments as the `User` creation call.
-      operationId: "updateUser"
+      operationId: updateUser
       consumes:
-      - "application/json"
+        - application/json
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - name: api-version
-        in: query
-        description: API Version to target for this request
-        type: string
-        default: "v1"
-        enum: [v1, v2]
-      - name: "userId"
-        in: "path"
-        description: "ID of the user to update"
-        required: true
-        type: "string"
-        format: "uuid"
-      - name: "user"
-        in: "body"
-        description: "User data to update"
-        required: true
-        schema:
-          type: object
-          properties:
-            description:
-              type: string
-            name:
-              type: string
-            secrets:
-              type: array
-              items:
-                type: object
-                properties:
-                  user_id:
-                    type: string
-                    format: uuid
-                  data:
-                    type: string
-                    description: Encrypted user string
-            uri:
-              type: string
-              format: url
-        
+        - name: api-version
+          in: query
+          description: API Version to target for this request
+          type: string
+          default: v1
+          enum:
+            - v1
+            - v2
+        - name: userId
+          in: path
+          description: ID of the user to update
+          required: true
+          type: string
+          format: uuid
+        - name: user
+          in: body
+          description: User data to update
+          required: true
+          schema:
+            type: object
+            properties:
+              description:
+                type: string
+              name:
+                type: string
+              secrets:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    user_id:
+                      type: string
+                      format: uuid
+                    data:
+                      type: string
+                      description: Encrypted user string
+              uri:
+                type: string
+                format: url
       responses:
-        200:
+        '200':
           description: |
             OK
             --
-        
-        400:
+        '400':
           description: |
             Bad Request
             --
             Some required parameters are missing
-        404:
+        '404':
           description: |
             Not Found
             --
             When either of the following is true
              - A user with the given `userId` does not exist
              - The current user does not have sufficient permission on the user
-      security:
-      - passbolt_auth:
-        - "write:user"
-        - "read:user"
+      
     delete:
-      operationId: "deleteUser"
-      tags: 
-      - "User"
-      summary: "Deletes a user"
+      operationId: deleteUser
+      tags:
+        - User
+      summary: Deletes a user
       produces:
-      - "application/json"
+        - application/json
       description: |
         Deletes the user and also drops all the associated permissions.
       parameters:
-      - name: api-version
-        in: query
-        description: API Version to target for this request
-        type: string
-        default: "v1"
-        enum: [v1, v2]
-      - name: "userId"
-        in: "path"
-        description: "User id to delete"
-        required: true
-        type: "string"
-        format: "uuid"
+        - name: api-version
+          in: query
+          description: API Version to target for this request
+          type: string
+          default: v1
+          enum:
+            - v1
+            - v2
+        - name: userId
+          in: path
+          description: User id to delete
+          required: true
+          type: string
+          format: uuid
       responses:
-        200:
+        '200':
           description: |
             OK
             --
-        400:
+        '400':
           description: |
             Bad Request
             --
             When `userId` is not a valid `UUID`
-        404:
+        '404':
           description: |
             Not Found
             --
@@ -695,71 +710,69 @@ paths:
             - The User is already deleted.
             - If the user does not have access to the user.
             - If the user does not have the permission to delete the user.
-        500:
+        '500':
           description: |
             Server Error
             --
             if the user could not be deleted for other reasons
-      security:
-        - passbolt_auth:
-          - "delete:user"
-  
-  "/users/{userId}/dry-run":
+      
+  '/users/{userId}/dry-run':
     delete:
       tags:
-      - User
+        - User
       summary: Checks if a user can be deleted
       description: |
         A User can not be deleted if 
         * it's the sole owner of a shared Resource or
         * it's the sole manager of a Group or
         * it's the sole manager of a Group that is the sole owner of a shared Resource
-        
+
         This endpoint is useful when you want to check and avoid any side effects of deleting a user.
       parameters:
-      - name: api-version
-        in: query
-        description: API Version to target for this request
-        type: string
-        default: "v1"
-        enum: [v1, v2]
-      - name: "userId"
-        in: "path"
-        description: "User id to check for deletion"
-        required: true
-        type: "string"
-        format: "uuid"
-      responses:
-        200:
-          description: |
-            OK
-            --
-            The User can be deleted safely
-        400:
-          description: |
-            Bad Request
-            --
-            Some of the validation checks failed. The User can not be deleted safely.
-      security:
-        - passbolt_auth:
-          - "delete:user"
-      
-  "/groups.json":
-    get:
-      description: Returns a list of your groups. The groups are returned sorted alphabetically by their name.
-      summary: List all groups
-      operationId: "getGroups"
-      tags: 
-      - "Group"
-      produces:
-        - application/json
-      parameters: 
         - name: api-version
           in: query
           description: API Version to target for this request
           type: string
-          default: "v1"
-          enum: [v1, v2]
+          default: v1
+          enum:
+            - v1
+            - v2
+        - name: userId
+          in: path
+          description: User id to check for deletion
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: |
+            OK
+            --
+            The User can be deleted safely
+        '400':
+          description: |
+            Bad Request
+            --
+            Some of the validation checks failed. The User can not be deleted safely.
+      
+  /groups.json:
+    get:
+      description: Returns a list of your groups. The groups are returned sorted alphabetically by their name.
+      summary: List all groups
+      operationId: getGroups
+      tags:
+        - Group
+      produces:
+        - application/json
+      parameters:
+        - name: api-version
+          in: query
+          description: API Version to target for this request
+          type: string
+          default: v1
+          enum:
+            - v1
+            - v2
         - name: contain
           description: Fields that must be included in the response. Takes a comma separated list.
           in: query
@@ -767,14 +780,21 @@ paths:
           collectionFormat: csv
           items:
             type: string
-            enum: ['modifier', 'modifier.profile', 'user', 'group_user', 'my_group_user']
+            enum:
+              - modifier
+              - modifier.profile
+              - user
+              - group_user
+              - my_group_user
         - name: filter
           in: query
           type: array
           collectionFormat: csv
           items:
             type: string
-            enum: ['has-users', 'has-managers']
+            enum:
+              - has-users
+              - has-managers
         - name: order
           in: query
           description: How the result list should be sorted.
@@ -782,10 +802,10 @@ paths:
           collectionFormat: csv
           items:
             type: string
-            enum: ['Group.name']
-        
+            enum:
+              - Group.name
       responses:
-        200:
+        '200':
           description: OK
           schema:
             type: object
@@ -795,20 +815,17 @@ paths:
               body:
                 type: array
                 items:
-                  $ref: "#/definitions/Group"
-        403:
+                  $ref: '#/definitions/Group'
+        '403':
           description: |
             Authentication failure.
             --
             When the group making the request is not authenticated
-      security:
-      - passbolt_auth:
-        - "read:group"
-    
+      
     post:
-      operationId: "createGroup"
-      tags: 
-      - "Group"
+      operationId: createGroup
+      tags:
+        - Group
       summary: Creates a new group.
       description: Creates a new group.
       consumes:
@@ -818,13 +835,15 @@ paths:
           in: query
           description: API Version to target for this request
           type: string
-          default: "v1"
-          enum: [v1, v2]
+          default: v1
+          enum:
+            - v1
+            - v2
         - in: body
           name: group
           schema:
             type: object
-            required: 
+            required:
               - name
               - group_users
             properties:
@@ -841,46 +860,45 @@ paths:
                     is_admin:
                       type: boolean
       responses:
-        200:
+        '200':
           description: |
             OK
             --
-        400:
+        '400':
           description: |
             Bad Request
             --
-        403:
+        '403':
           description: |
             Forbidden
             --
-      security:
-      - passbolt_auth:
-        - "write:group"
-    
-  "/groups/{groupId}.json":  
+      
+  '/groups/{groupId}.json':
     get:
-      operationId: "getGroup"
-      tags: 
-      - "Group"
-      summary: "Find group by ID"
-      description: "Returns a single group"
+      operationId: getGroup
+      tags:
+        - Group
+      summary: Find group by ID
+      description: Returns a single group
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - name: api-version
-        in: query
-        description: API Version to target for this request
-        type: string
-        default: "v1"
-        enum: [v1, v2]
-      - name: "groupId"
-        in: "path"
-        description: "ID of the group to return"
-        required: true
-        type: "string"
-        format: "uuid"
+        - name: api-version
+          in: query
+          description: API Version to target for this request
+          type: string
+          default: v1
+          enum:
+            - v1
+            - v2
+        - name: groupId
+          in: path
+          description: ID of the group to return
+          required: true
+          type: string
+          format: uuid
       responses:
-        200:
+        '200':
           description: |
             OK
             --
@@ -891,70 +909,69 @@ paths:
                 $ref: '#/definitions/ApiResponseHeader'
               body:
                 $ref: '#/definitions/Group'
-        400:
+        '400':
           description: |
             Bad Request
             --
             The `groupId` is not valid.
-        404:
+        '404':
           description: |
             Not Found
             --
             When either of the following is true
              - A group with the given `groupId` does not exist.
              - The current group does not have `READ` permission on the group
-      security:
-      - passbolt_auth:
-        - "write:group"
+     
     put:
-      tags: 
-      - "Group"
-      summary: "Update an existing group"
+      tags:
+        - Group
+      summary: Update an existing group
       description: |
         Updates the specified group by setting the values of the parameters passed. Any parameters not provided will be left unchanged.  
           
           This request accepts mostly the same arguments as the `Group` creation call.
-      operationId: "updateGroup"
+      operationId: updateGroup
       consumes:
-      - "application/json"
+        - application/json
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - name: api-version
-        in: query
-        description: API Version to target for this request
-        type: string
-        default: "v1"
-        enum: [v1, v2]
-      - name: "groupId"
-        in: "path"
-        description: "ID of the group to update"
-        required: true
-        type: "string"
-        format: "uuid"
-      - in: body
-        name: group
-        schema:
-          type: object
-          required: 
-            - name
-            - group_users
-          properties:
-            name:
-              type: string
-            group_users:
-              type: array
-              items:
-                type: object
-                properties:
-                  user_id:
-                    type: string
-                    format: uuid
-                  is_admin:
-                    type: boolean
-        
+        - name: api-version
+          in: query
+          description: API Version to target for this request
+          type: string
+          default: v1
+          enum:
+            - v1
+            - v2
+        - name: groupId
+          in: path
+          description: ID of the group to update
+          required: true
+          type: string
+          format: uuid
+        - in: body
+          name: group
+          schema:
+            type: object
+            required:
+              - name
+              - group_users
+            properties:
+              name:
+                type: string
+              group_users:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    user_id:
+                      type: string
+                      format: uuid
+                    is_admin:
+                      type: boolean
       responses:
-        200:
+        '200':
           description: |
             OK
             --
@@ -965,57 +982,53 @@ paths:
                 $ref: '#/definitions/ApiResponseHeader'
               body:
                 $ref: '#/definitions/Group'
-            
-        400:
+        '400':
           description: |
             Bad Request
             --
             Some required parameters are missing
-        404:
+        '404':
           description: |
             Not Found
             --
             When either of the following is true
              - A group with the given `groupId` does not exist
              - The current group does not have sufficient permission on the group
-      security:
-      - passbolt_auth:
-        - "write:group"
-        - "read:group"
-    
     delete:
-      operationId: "deleteGroup"
-      tags: 
-      - "Group"
-      summary: "Deletes a group"
+      operationId: deleteGroup
+      tags:
+        - Group
+      summary: Deletes a group
       produces:
-      - "application/json"
+        - application/json
       description: |
         Deletes the Group and also all the Resources that belong only to this group.
       parameters:
-      - name: api-version
-        in: query
-        description: API Version to target for this request
-        type: string
-        default: "v1"
-        enum: [v1, v2]
-      - name: "groupId"
-        in: "path"
-        description: "Group id to delete"
-        required: true
-        type: "string"
-        format: "uuid"
+        - name: api-version
+          in: query
+          description: API Version to target for this request
+          type: string
+          default: v1
+          enum:
+            - v1
+            - v2
+        - name: groupId
+          in: path
+          description: Group id to delete
+          required: true
+          type: string
+          format: uuid
       responses:
-        200:
+        '200':
           description: |
             OK
             --
-        400:
+        '400':
           description: |
             Bad Request
             --
             When `groupId` is not a valid `UUID`
-        404:
+        '404':
           description: |
             Not Found
             --
@@ -1023,116 +1036,114 @@ paths:
             - The `groupId` does not exist.
             - The Group is already deleted.
             - If the user is neither a Group manager nor Admin.
-        500:
+        '500':
           description: |
             Server Error
             --
             if the group could not be deleted for other reasons
-      security:
-        - passbolt_auth:
-          - "delete:group"
-          
-  "/groups/{groupId}/dry-run":
+      
+  '/groups/{groupId}/dry-run':
     put:
       tags:
-      - Group
+        - Group
       summary: Checks if a group can be updated.
       description: |
         The endpoint performs all the validation checks required for a Group update. This is useful to determine if it's safe to update a Group. It returns a success response if the Group can be updated, on validation failures, the response will have the reason and suggestions for the failed checks.
       parameters:
-      - name: api-version
-        in: query
-        description: API Version to target for this request
-        type: string
-        default: "v1"
-        enum: [v1, v2]
-      - name: "groupId"
-        in: "path"
-        description: "Group id to check for update."
-        required: true
-        type: "string"
-        format: "uuid"
+        - name: api-version
+          in: query
+          description: API Version to target for this request
+          type: string
+          default: v1
+          enum:
+            - v1
+            - v2
+        - name: groupId
+          in: path
+          description: Group id to check for update.
+          required: true
+          type: string
+          format: uuid
       responses:
-        200:
+        '200':
           description: |
             OK
             --
             The group can be updated safely
-        400:
+        '400':
           description: |
             Bad Request
             --
             If `groupId` is not a valid UUID.
-        403:
+        '403':
           description: |
             Forbidden
             --
             If the user making the request is neither the Group manager nor an Admin.
-        404:
+        '404':
           description: |
             Not Found
             --
             * No Group found for the given `groupId` or
             * The Group has been deleted.
-            
-      security:
-        - passbolt_auth:
-          - "write:group"
+      
     delete:
       tags:
-      - Group
+        - Group
       summary: Checks if a group can be deleted
       description: A Group can not be deleted if it's the sole owner of a Resource. This endpoint is useful when you want to check and avoid any side effects of deleting a group.
       parameters:
-      - name: api-version
-        in: query
-        description: API Version to target for this request
-        type: string
-        default: "v1"
-        enum: [v1, v2]
-      - name: "groupId"
-        in: "path"
-        description: "Group id to check for deletion"
-        required: true
-        type: "string"
-        format: "uuid"
+        - name: api-version
+          in: query
+          description: API Version to target for this request
+          type: string
+          default: v1
+          enum:
+            - v1
+            - v2
+        - name: groupId
+          in: path
+          description: Group id to check for deletion
+          required: true
+          type: string
+          format: uuid
       responses:
-        200:
+        '200':
           description: |
             OK
             --
             The Group can be deleted safely.
-        400:
+        '400':
           description: |
             Bad Request
             --
             The Group is the sole owner of a Resource and hence can not be deleted.
-      security:
-        - passbolt_auth:
-          - "delete:group"
-          
-  "/share/search-aros.json":
+      
+  /share/search-aros.json:
     get:
-      tags: 
-      - "Share"
+      tags:
+        - Share
       summary: Get a list of Access Resource Objects or AROs
       description: Get a list of all the users/groups with whom an item can be shared
-      parameters: 
-      - name: api-version
-        in: query
-        description: API Version to target for this request
-        type: string
-        default: "v1"
-        enum: [v1, v2]
-      - name: filter
-        in: query
-        type: array
-        collectionFormat: csv
-        items:
+      parameters:
+        - name: api-version
+          in: query
+          description: API Version to target for this request
           type: string
-          enum: ['search']
+          default: v1
+          enum:
+            - v1
+            - v2
+        - name: filter
+          in: query
+          type: array
+          collectionFormat: csv
+          items:
+            type: string
+            enum:
+              - search
       responses:
-        200:
+        '200':
           description: OK
           schema:
             type: object
@@ -1163,34 +1174,35 @@ paths:
                     modified_by:
                       type: string
                       format: uuid
-                      
-  "/share/simulate/resource/{resourceId}.json":
+  '/share/simulate/resource/{resourceId}.json':
     post:
-      tags: 
-      - "Share"
-      summary: "Simulates sharing a password."
+      tags:
+        - Share
+      summary: Simulates sharing a password.
       description: |
         Simulates sharing a resource with a user and/or group. Useful for avoiding any side effects and checking the possible errors.
-      operationId: "simulateShare"
+      operationId: simulateShare
       consumes:
-      - "application/json"
+        - application/json
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - name: api-version
-        in: query
-        description: API Version to target for this request
-        type: string
-        default: "v1"
-        enum: [v1, v2]
-      - name: "resourceId"
-        in: "path"
-        description: "The identifier of the resource to dry run a share on"
-        required: true
-        type: "string"
-        format: "uuid"
+        - name: api-version
+          in: query
+          description: API Version to target for this request
+          type: string
+          default: v1
+          enum:
+            - v1
+            - v2
+        - name: resourceId
+          in: path
+          description: The identifier of the resource to dry run a share on
+          required: true
+          type: string
+          format: uuid
       responses:
-        200:
+        '200':
           description: |
             OK
             --
@@ -1213,12 +1225,12 @@ paths:
                         type: array
                         items:
                           type: object
-        400:
+        '400':
           description: |
             Bad Request
             --
             If the `resourceId` is not a valid uuid
-        404:
+        '404':
           description: |
             Not Found
             --
@@ -1226,46 +1238,45 @@ paths:
              - A resource with the given `resourceId` does not exist
              - The resource is soft deleted
              - The user does not have access to the resource
-      security:
-      - passbolt_auth:
-        - "share:resource"
-        
-  "/share/resource/{resourceId}.json":
+      
+  '/share/resource/{resourceId}.json':
     put:
-      tags: 
-      - "Share"
-      summary: "Share a password"
+      tags:
+        - Share
+      summary: Share a password
       description: |
         Shares a password.
-      operationId: "shareResource"
+      operationId: shareResource
       consumes:
-      - "application/json"
+        - application/json
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - name: api-version
-        in: query
-        description: API Version to target for this request
-        type: string
-        default: "v1"
-        enum: [v1, v2]
-      - name: "resourceId"
-        in: "path"
-        description: "The identifier of the resource to dry run a share on"
-        required: true
-        type: "string"
-        format: "uuid"
+        - name: api-version
+          in: query
+          description: API Version to target for this request
+          type: string
+          default: v1
+          enum:
+            - v1
+            - v2
+        - name: resourceId
+          in: path
+          description: The identifier of the resource to dry run a share on
+          required: true
+          type: string
+          format: uuid
       responses:
-        200:
+        '200':
           description: |
             OK
             --
-        400:
+        '400':
           description: |
             Bad Request
             --
             If the `resourceId` is not a valid uuid
-        404:
+        '404':
           description: |
             Not Found
             --
@@ -1273,31 +1284,30 @@ paths:
              - A resource with the given `resourceId` does not exist
              - The resource is soft deleted
              - The user does not have access to the resource
-      security:
-      - passbolt_auth:
-        - "share:resource"
-
-  "/permissions/resource/{resourceId}.json":
+      
+  '/permissions/resource/{resourceId}.json':
     get:
       tags:
-      - "Permission"
-      summary: "TODO Summary"
-      description: "TODO Description"
+        - Permission
+      summary: TODO Summary
+      description: TODO Description
       parameters:
-      - name: api-version
-        in: query
-        description: API Version to target for this request
-        type: string
-        default: "v1"
-        enum: [v1, v2]
-      - name: "resourceId"
-        in: "path"
-        description: "UUID of the password to check permissions for"
-        required: true
-        type: "string"
-        format: "uuid"
+        - name: api-version
+          in: query
+          description: API Version to target for this request
+          type: string
+          default: v1
+          enum:
+            - v1
+            - v2
+        - name: resourceId
+          in: path
+          description: UUID of the password to check permissions for
+          required: true
+          type: string
+          format: uuid
       responses:
-        200:
+        '200':
           description: |
             OK
             --
@@ -1334,26 +1344,27 @@ paths:
                       format: datetime
                     type:
                       type: number
-
-  "/favorites/resource/{resourceId}.json":
+  '/favorites/resource/{resourceId}.json':
     post:
       tags:
-      - "Favorite"
-      summary: "Add Password to favourites"
-      description: "Add the given password to list of favourites"
+        - Favorite
+      summary: Add Password to favourites
+      description: Add the given password to list of favourites
       parameters:
-      - name: "resourceId"
-        in: path
-        required: true
-        type: string
-      - name: "api-version"
-        in: query
-        description: API Version to target for this request
-        type: string
-        default: "v1"
-        enum: [v1, v2]
+        - name: resourceId
+          in: path
+          required: true
+          type: string
+        - name: api-version
+          in: query
+          description: API Version to target for this request
+          type: string
+          default: v1
+          enum:
+            - v1
+            - v2
       responses:
-        200:
+        '200':
           description: OK
           schema:
             type: object
@@ -1381,7 +1392,7 @@ paths:
                   modified:
                     type: string
                     format: datetime
-        404:
+        '404':
           description: |
             Not Found
             ---
@@ -1389,27 +1400,28 @@ paths:
              - If the resource does not exist
              - If the resource is soft deleted
              - If the user does not have access to the resource
-  
-  "/favorites/{favoriteId}.json":
+  '/favorites/{favoriteId}.json':
     delete:
       tags:
-      - "Favorite"
+        - Favorite
       summary: Delete a favorite entry
       description: Remove a password from the list of favorites
       parameters:
-      - name: favoriteId
-        in: path
-        required: true
-        type: string
-        format: uuid
-      - name: api-version
-        in: query
-        description: API Version to target for this request
-        type: string
-        default: "v1"
-        enum: [v1, v2]
+        - name: favoriteId
+          in: path
+          required: true
+          type: string
+          format: uuid
+        - name: api-version
+          in: query
+          description: API Version to target for this request
+          type: string
+          default: v1
+          enum:
+            - v1
+            - v2
       responses:
-        200:
+        '200':
           description: OK
           schema:
             type: object
@@ -1418,37 +1430,38 @@ paths:
                 $ref: '#/definitions/ApiResponseHeader'
               body:
                 type: object
-        400:
+        '400':
           description: |
             Bad Request
             --
             When the given `favoriteId` is not a valid uuid
-        404:
+        '404':
           description: |
             Not Found
             ---
              - If the favorite does not exist
-
-  "/comments/resource/{resourceId}.json":
+  '/comments/resource/{resourceId}.json':
     get:
       tags:
-      - Comment
+        - Comment
       summary: List all comments on the record
       description: List all comments on an entity of `model` type and identified by `modelId`
       parameters:
-      - name: resourceId
-        in: path
-        type: string
-        format: uuid
-        required: true
-        description: ID of the resource to fetch comments for
-      - name: api-version
-        in: query
-        type: string
-        enum: ["v1", "v2"]
-        default: v1
+        - name: resourceId
+          in: path
+          type: string
+          format: uuid
+          required: true
+          description: ID of the resource to fetch comments for
+        - name: api-version
+          in: query
+          type: string
+          enum:
+            - v1
+            - v2
+          default: v1
       responses:
-        200:
+        '200':
           description: OK
           schema:
             type: object
@@ -1459,47 +1472,46 @@ paths:
                 type: array
                 items:
                   $ref: '#/definitions/Comment'
-        400:
+        '400':
           description: |
             Bad Request
             ---
             When the given `resourceId` is not a valid UUID
-        404:
+        '404':
           description: |
             Not Found
             ---
             If a resource with the given `resourceId` is not found
-      security:
-      - passbolt_auth:
-        - "read:comment"
-    
+      
     post:
       tags:
-      - Comment
+        - Comment
       summary: Add a comment to a resource
       description: Add a comment to a resource
       parameters:
-      - name: resourceId
-        in: path
-        type: string
-        format: uuid
-        required: true
-        description: ID of the resource to add comment to
-      - name: api-version
-        in: query
-        type: string
-        enum: ["v1", "v2"]
-        default: v1
-      - in: body
-        name: comment
-        schema:
-          type: object
-          properties:
-            content:
-              type: string
-              description: The comment text
+        - name: resourceId
+          in: path
+          type: string
+          format: uuid
+          required: true
+          description: ID of the resource to add comment to
+        - name: api-version
+          in: query
+          type: string
+          enum:
+            - v1
+            - v2
+          default: v1
+        - in: body
+          name: comment
+          schema:
+            type: object
+            properties:
+              content:
+                type: string
+                description: The comment text
       responses:
-        200:
+        '200':
           description: OK
           schema:
             type: object
@@ -1510,48 +1522,47 @@ paths:
                 type: array
                 items:
                   $ref: '#/definitions/Comment'
-        400:
+        '400':
           description: |
             Bad Request
             ---
             When the given `resourceId` is not a valid UUID
-        404:
+        '404':
           description: |
             Not Found
             ---
             If a resource with the given `resourceId` is not found
-      security:
-      - passbolt_auth:
-        - "write:comment"
-               
-  "/comments/{commentId}.json":
+      
+  '/comments/{commentId}.json':
     put:
       tags:
-      - Comment
+        - Comment
       summary: Update a comment
       description: Update a comment
       parameters:
-      - name: commentId
-        in: path
-        type: string
-        format: uuid
-        required: true
-        description: ID of the comment to update
-      - name: api-version
-        in: query
-        type: string
-        enum: ["v1", "v2"]
-        default: v1
-      - in: body
-        name: comment
-        schema:
-          type: object
-          properties:
-            content:
-              type: string
-              description: The new content to update
+        - name: commentId
+          in: path
+          type: string
+          format: uuid
+          required: true
+          description: ID of the comment to update
+        - name: api-version
+          in: query
+          type: string
+          enum:
+            - v1
+            - v2
+          default: v1
+        - in: body
+          name: comment
+          schema:
+            type: object
+            properties:
+              content:
+                type: string
+                description: The new content to update
       responses:
-        200:
+        '200':
           description: OK
           schema:
             type: object
@@ -1562,39 +1573,38 @@ paths:
                 type: array
                 items:
                   $ref: '#/definitions/Comment'
-        400:
+        '400':
           description: |
             Bad Request
             ---
             When the given `resourceId` is not a valid UUID
-        404:
+        '404':
           description: |
             Not Found
             ---
             If a resource with the given `resourceId` is not found
-      security:
-      - passbolt_auth:
-        - "write:comment"
-    
+      
     delete:
       tags:
-      - Comment
+        - Comment
       summary: Delete a comment
       description: Delete a comment
       parameters:
-      - name: commentId
-        in: path
-        type: string
-        format: uuid
-        required: true
-        description: ID of the comment to delete
-      - name: api-version
-        in: query
-        type: string
-        enum: ["v1", "v2"]
-        default: v1
+        - name: commentId
+          in: path
+          type: string
+          format: uuid
+          required: true
+          description: ID of the comment to delete
+        - name: api-version
+          in: query
+          type: string
+          enum:
+            - v1
+            - v2
+          default: v1
       responses:
-        200:
+        '200':
           description: OK
           schema:
             type: object
@@ -1603,35 +1613,34 @@ paths:
                 $ref: '#/definitions/ApiResponseHeader'
               body:
                 type: object
-        400:
+        '400':
           description: |
             Bad Request
             ---
             When the given `resourceId` is not a valid UUID
-        404:
+        '404':
           description: |
             Not Found
             ---
             If a resource with the given `resourceId` is not found
             If the current user does not have enough permission to delete the comment
-      security:
-      - passbolt_auth:
-        - "write:comment"
       
-  "/gpgkeys.json":
+  /gpgkeys.json:
     get:
       tags:
-      - GPG Key
+        - GPG Key
       summary: List all the GPG keys
       description: Fetches a list of all your GPG keys
       parameters:
-      - name: api-version
-        in: query
-        type: string
-        enum: ["v1", "v2"]
-        default: v1
+        - name: api-version
+          in: query
+          type: string
+          enum:
+            - v1
+            - v2
+          default: v1
       responses:
-        200:
+        '200':
           description: OK
           schema:
             type: object
@@ -1642,30 +1651,29 @@ paths:
                 type: array
                 items:
                   $ref: '#/definitions/GpgKey'
-      security:
-      - passbolt_auth:
-        - "read:gpgkey"
-                  
-  "/gpgkeys/{keyId}.json":
+      
+  '/gpgkeys/{keyId}.json':
     get:
       tags:
-      - GPG Key
+        - GPG Key
       summary: Find GPG key by ID
       description: Returns a single GPG key
       parameters:
-      - name: api-version
-        in: query
-        type: string
-        enum: ["v1", "v2"]
-        default: v1
-      - name: keyId
-        in: path
-        type: string
-        format: uuid
-        required: true
-        description: ID of the GPG key to fetch
+        - name: api-version
+          in: query
+          type: string
+          enum:
+            - v1
+            - v2
+          default: v1
+        - name: keyId
+          in: path
+          type: string
+          format: uuid
+          required: true
+          description: ID of the GPG key to fetch
       responses:
-        200:
+        '200':
           description: OK
           schema:
             type: object
@@ -1674,41 +1682,39 @@ paths:
                 $ref: '#/definitions/ApiResponseHeader'
               body:
                 $ref: '#/definitions/GpgKey'
-                
-        400:
+        '400':
           description: |
             Bad Request
             ---
             If the given `keyId` is not a valid UUID
-        404:
+        '404':
           description: |
             Not Found
             ---
             If a GPGKey with the given `keyId` could not be found
-      security:
-      - passbolt_auth:
-        - "read:gpgkey"
-        
-  "/secrets/resource/{resourceId}.json":
+      
+  '/secrets/resource/{resourceId}.json':
     get:
       tags:
-      - Secret
+        - Secret
       summary: Get password for a given resource.
       description: Will return the secret password encoded with user's GPG key. This will need to be decrypted on the client end to get the actual password string.
       parameters:
-      - name: api-version
-        in: query
-        type: string
-        enum: ["v1", "v2"]
-        default: v1
-      - name: resourceId
-        in: path
-        type: string
-        format: uuid
-        required: true
-        description: ID of resource of which the password should be returned
+        - name: api-version
+          in: query
+          type: string
+          enum:
+            - v1
+            - v2
+          default: v1
+        - name: resourceId
+          in: path
+          type: string
+          format: uuid
+          required: true
+          description: ID of resource of which the password should be returned
       responses:
-        200:
+        '200':
           description: OK
           schema:
             type: object
@@ -1737,23 +1743,22 @@ paths:
                   user_id:
                     type: string
                     format: uuid
-      security:
-      - passbolt_auth:
-        - "read:secret"
-  
-  "/settings.json":
+     
+  /settings.json:
     get:
       tags:
-      - Settings
+        - Settings
       summary: List the user level settings
       parameters:
-      - name: "api-version"
-        in: query
-        type: string
-        enum: ["v1", "v2"]
-        default: v1
+        - name: api-version
+          in: query
+          type: string
+          enum:
+            - v1
+            - v2
+          default: v1
       responses:
-        200:
+        '200':
           description: OK
           schema:
             type: object
@@ -1793,26 +1798,27 @@ paths:
                     properties:
                       edition:
                         type: string
-                        enum: ["ce", "pro"]
+                        enum:
+                          - ce
+                          - pro
                       plugins:
                         type: object
-      security:
-      - passbolt_auth:
-        - "read:settings"
-                        
-  "/roles.json":
+      
+  /roles.json:
     get:
       tags:
-      - Role
+        - Role
       summary: List the available user roles
       parameters:
-      - name: "api-version"
-        in: query
-        type: string
-        enum: ["v1", "v2"]
-        default: v1
+        - name: api-version
+          in: query
+          type: string
+          enum:
+            - v1
+            - v2
+          default: v1
       responses:
-        200:
+        '200':
           description: OK
           schema:
             type: object
@@ -1823,24 +1829,23 @@ paths:
                 type: array
                 items:
                   $ref: '#/definitions/Role'
-      security:
-      - passbolt_auth:
-        - "read:role"
-        
-  "/healthcheck.json":
+      
+  /healthcheck.json:
     get:
       tags:
-      - Health Check
+        - Health Check
       summary: Perform a health check
       description: Return server status report
       parameters:
-      - name: "api-version"
-        in: query
-        type: string
-        enum: ["v1", "v2"]
-        default: v1
+        - name: api-version
+          in: query
+          type: string
+          enum:
+            - v1
+            - v2
+          default: v1
       responses:
-        200:
+        '200':
           description: OK
           schema:
             type: object
@@ -1864,24 +1869,23 @@ paths:
                     type: object
                   gpg:
                     type: object
-      security:
-      - passbolt_auth:
-        - "read:healthcheck"
       
-  "/healthcheck/status.json":
+  /healthcheck/status.json:
     get:
       tags:
-      - Health Check
+        - Health Check
       summary: Get the health check status
       description: Return server status
       parameters:
-      - name: "api-version"
-        in: query
-        type: string
-        enum: ["v1", "v2"]
-        default: v1
+        - name: api-version
+          in: query
+          type: string
+          enum:
+            - v1
+            - v2
+          default: v1
       responses:
-        200:
+        '200':
           description: OK
           schema:
             type: object
@@ -1890,33 +1894,10 @@ paths:
                 $ref: '#/definitions/ApiResponseHeader'
               body:
                 type: string
-                enum: ["OK"]
-      security:
-      - passbolt_auth:
-        - "read:healthcheck"              
-    
-securityDefinitions:
-  passbolt_auth:
-    type: "oauth2"
-    authorizationUrl: "https://api.passbolt.com/oauth/dialog"
-    flow: "implicit"
-    scopes:
-      write:resource: "modify password in your account"
-      read:resource: "read your passwords"
-      share:resource: "share your passwords"
-      write:user: "modify users"
-      read:user: "read users"
-      delete:user: "delete users"
-      read:group: "read groups"
-      write:group: "write groups"
-      delete:group: "delete groups"
-      read:comment: "read your comments"
-      write:comment: "write your comments"
-      read:gpgkey: "read your gpg keys"
-      read:secret: "read your resource secret"
-      read:settings: "read your settings"
-      read:role: "read your roles"
-      read:healthcheck: "read your health check status"
+                enum:
+                  - OK
+
+  
 definitions:
   Comment:
     type: object
@@ -1950,34 +1931,31 @@ definitions:
         type: string
         format: uuid
       creator:
-        $ref: "#/definitions/User"
+        $ref: '#/definitions/User'
       children:
         type: array
         items:
-          $ref: "#/definitions/Comment"
-      
-      
+          $ref: '#/definitions/Comment'
   Favorite:
-    type: "object"
+    type: object
     properties:
       id:
-        type: "string"
-        format: "uuid"
+        type: string
+        format: uuid
       created:
-        type: "string"
-        format: "date"
+        type: string
+        format: date
       foreign_key:
-        type: "string"
-        format: "uuid"
+        type: string
+        format: uuid
       foreign_model:
-        type: "string"
+        type: string
       modified:
-        type: "string"
-        format: "date"
+        type: string
+        format: date
       user_id:
-        type: "string"
-        format: "uuid"
-        
+        type: string
+        format: uuid
   Group:
     type: object
     properties:
@@ -2022,130 +2000,126 @@ definitions:
               type: boolean
             user:
               $ref: '#/definitions/UserFull'
-  
   Permission:
-    type: "object"
+    type: object
     properties:
       id:
-        type: "string"
-        format: "uuid"
+        type: string
+        format: uuid
       aco:
-        type: "string"
+        type: string
       aco_foreign_key:
-        type: "string"
-        format: "uuid"
+        type: string
+        format: uuid
       aro:
-        type: "string"
+        type: string
       aro_foreign_key:
-        type: "string"
-        format: "uuid"
+        type: string
+        format: uuid
       created:
-        type: "string"
-        format: "date"
+        type: string
+        format: date
       modified:
-        type: "string"
-        format: "date"
+        type: string
+        format: date
       type:
-        type: "integer"
-        
+        type: integer
   Resource:
     description: |
       `Resource` objects allow you to perform recurring charges, and to track multiple charges, that are associated with the same customer.
-      
+
       The API allows you to create, delete, and update your customers. 
-      
+
       You can retrieve individual customers as well as a list of all your customers.
-    type: "object"
+    type: object
     properties:
       id:
-        type: "string"
-        format: "uuid"
+        type: string
+        format: uuid
         description: |
           Unique ID of the password in `UUID` format
       created:
-        type: "string"
-        format: "date"
+        type: string
+        format: date
         description: |
           Datetime on when the password was created.
       created_by:
-        type: "string"
-        format: "uuid"
+        type: string
+        format: uuid
         description: |
           `ID` of the `User` who created the password in `UUID` format
       creator:
-        $ref: "#/definitions/User"
+        $ref: '#/definitions/User'
       deleted:
-        type: "boolean"
+        type: boolean
       description:
-        type: "string"
+        type: string
       favorite:
-        $ref: "#/definitions/Favorite"
+        $ref: '#/definitions/Favorite'
       modified:
-        type: "string"
-        format: "date"
+        type: string
+        format: date
       modified_by:
-        type: "string"
-        format: "uuid"
+        type: string
+        format: uuid
       modifier:
-        $ref: "#/definitions/User"
+        $ref: '#/definitions/User'
       name:
-        type: "string"
+        type: string
       permission:
-        $ref: "#/definitions/Permission"
+        $ref: '#/definitions/Permission'
       uri:
-        type: "string"
-        format: "url"
+        type: string
+        format: url
       username:
-        type: "string"
-        
+        type: string
   User:
-    type: "object"
+    type: object
     properties:
       id:
-        type: "string"
-        format: "uuid"
+        type: string
+        format: uuid
       active:
-        type: "boolean"
+        type: boolean
       created:
-        type: "string"
-        format: "date"
+        type: string
+        format: date
       deleted:
-        type: "boolean"
+        type: boolean
       last_logged_in:
-        type: "string"
-        format: "date"
+        type: string
+        format: date
       modified:
-        type: "string"
-        format: "date"
+        type: string
+        format: date
       role_id:
-        type: "string"
-        format: "uuid"
+        type: string
+        format: uuid
       username:
-        type: "string"
-        format: "email"
-        
+        type: string
+        format: email
   UserFull:
     type: object
     properties:
       id:
-        type: "string"
-        format: "uuid"
+        type: string
+        format: uuid
       role_id:
-        type: "string"
-        format: "uuid"
+        type: string
+        format: uuid
       username:
-        type: "string"
-        format: "email"
+        type: string
+        format: email
       active:
-        type: "boolean"
+        type: boolean
       deleted:
-        type: "boolean"
+        type: boolean
       created:
-        type: "string"
-        format: "date"
+        type: string
+        format: date
       modified:
-        type: "string"
-        format: "date"
+        type: string
+        format: date
       profile:
         $ref: '#/definitions/Profile'
       group_users:
@@ -2157,10 +2131,8 @@ definitions:
       gpgkey:
         $ref: '#/definitions/GpgKey'
       last_logged_in:
-        type: "string"
-        format: "date"
-      
-  
+        type: string
+        format: date
   GpgKey:
     type: object
     properties:
@@ -2182,7 +2154,8 @@ definitions:
         type: string
       type:
         type: string
-        enum: ["RSA"]
+        enum:
+          - RSA
       expires:
         type: string
         format: date
@@ -2198,8 +2171,6 @@ definitions:
       modified:
         type: string
         format: date
-      
-      
   Role:
     type: object
     properties:
@@ -2216,7 +2187,6 @@ definitions:
       modified:
         type: string
         format: date
-        
   Profile:
     type: object
     properties:
@@ -2238,7 +2208,6 @@ definitions:
       modified:
         type: string
         format: date
-        
   Avatar:
     type: object
     properties:
@@ -2253,14 +2222,18 @@ definitions:
         format: uuid
       model:
         type: string
-        enum: ["Avatar"]
+        enum:
+          - Avatar
       filename:
         type: string
       filesize:
         type: number
       mime_type:
         type: string
-        enum: [image/jpeg', 'image/png', 'image/gif']
+        enum:
+          - image/jpeg'
+          - image/png
+          - image/gif
       extension:
         type: string
       hash:
@@ -2284,37 +2257,33 @@ definitions:
           small:
             type: string
             format: uri
-  
   ApiResponseHeader:
     type: object
     properties:
       id:
-        type: "string"
-        format: "uuid"
+        type: string
+        format: uuid
       code:
         type: integer
       message:
-        type: "string"
+        type: string
       servertime:
-        type: "integer"
-        format: "timestamp"
+        type: integer
+        format: timestamp
       status:
-        type: "string"
+        type: string
       title:
-        type: "string"
+        type: string
       url:
-        type: "string"
-        format: "url"
-      
-      
-  
+        type: string
+        format: url
   ApiResponse:
-    type: "object"
+    type: object
     properties:
       header:
         type: object
         $ref: '#/definitions/ApiResponseHeader'
       body:
-        type: "array"
+        type: array
         items:
-          type: "object"
+          type: object
