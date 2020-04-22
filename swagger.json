@@ -2367,6 +2367,68 @@
     }
   },
   "definitions": {
+    "ApiResponseHeader": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "servertime": {
+          "type": "integer",
+          "format": "timestamp"
+        },
+        "status": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "url"
+        }
+      }
+    },
+    "ApiResponse": {
+      "type": "object",
+      "properties": {
+        "header": {
+          "type": "object",
+          "$ref": "#/definitions/ApiResponseHeader"
+        },
+        "body": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "Avatar": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "object",
+          "properties": {
+            "medium": {
+              "type": "string",
+              "format": "uri"
+            },
+            "small": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        }
+      }
+    },
     "Comment": {
       "type": "object",
       "properties": {
@@ -2444,6 +2506,64 @@
         "user_id": {
           "type": "string",
           "format": "uuid"
+        }
+      }
+    },
+    "GpgKey": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "user_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "armored_key": {
+          "type": "string"
+        },
+        "bits": {
+          "type": "number"
+        },
+        "uid": {
+          "type": "string"
+        },
+        "key_id": {
+          "type": "string"
+        },
+        "fingerprint": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "RSA",
+            "ELGAMAL",
+            "DSA",
+            "ECC",
+            "ECDSA",
+            "DH"
+          ]
+        },
+        "expires": {
+          "type": "string",
+          "format": "date"
+        },
+        "key_created": {
+          "type": "string",
+          "format": "date"
+        },
+        "deleted": {
+          "type": "boolean"
+        },
+        "created": {
+          "type": "string",
+          "format": "date"
+        },
+        "modified": {
+          "type": "string",
+          "format": "date"
         }
       }
     },
@@ -2543,8 +2663,36 @@
         }
       }
     },
+    "Profile": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "user_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "first_name": {
+          "type": "string",
+          "maxLength": 255
+        },
+        "last_name": {
+          "type": "string",
+          "maxLength": 255
+        },
+        "created": {
+          "type": "string",
+          "format": "date"
+        },
+        "modified": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
     "Resource": {
-      "description": "`Resource` objects allow you to perform recurring charges, and to track multiple charges, that are associated with the same customer.\n\nThe API allows you to create, delete, and update your customers. \n\nYou can retrieve individual customers as well as a list of all your customers.\n",
       "type": "object",
       "properties": {
         "id": {
@@ -2597,6 +2745,29 @@
         },
         "username": {
           "type": "string"
+        }
+      }
+    },
+    "Role": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date"
+        },
+        "modified": {
+          "type": "string",
+          "format": "date"
         }
       }
     },
@@ -2682,226 +2853,6 @@
         "last_logged_in": {
           "type": "string",
           "format": "date"
-        }
-      }
-    },
-    "GpgKey": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "user_id": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "armored_key": {
-          "type": "string"
-        },
-        "bits": {
-          "type": "number"
-        },
-        "uid": {
-          "type": "string"
-        },
-        "key_id": {
-          "type": "string"
-        },
-        "fingerprint": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string",
-          "enum": [
-            "RSA"
-          ]
-        },
-        "expires": {
-          "type": "string",
-          "format": "date"
-        },
-        "key_created": {
-          "type": "string",
-          "format": "date"
-        },
-        "deleted": {
-          "type": "string",
-          "format": "date"
-        },
-        "created": {
-          "type": "string",
-          "format": "date"
-        },
-        "modified": {
-          "type": "string",
-          "format": "date"
-        }
-      }
-    },
-    "Role": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "name": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "created": {
-          "type": "string",
-          "format": "date"
-        },
-        "modified": {
-          "type": "string",
-          "format": "date"
-        }
-      }
-    },
-    "Profile": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "user_id": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "first_name": {
-          "type": "string",
-          "maxLength": 255
-        },
-        "last_name": {
-          "type": "string",
-          "maxLength": 255
-        },
-        "created": {
-          "type": "string",
-          "format": "date"
-        },
-        "modified": {
-          "type": "string",
-          "format": "date"
-        }
-      }
-    },
-    "Avatar": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "user_id": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "foreign_key": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "model": {
-          "type": "string",
-          "enum": [
-            "Avatar"
-          ]
-        },
-        "filename": {
-          "type": "string"
-        },
-        "filesize": {
-          "type": "number"
-        },
-        "mime_type": {
-          "type": "string",
-          "enum": [
-            "image/jpeg'",
-            "image/png",
-            "image/gif"
-          ]
-        },
-        "extension": {
-          "type": "string"
-        },
-        "hash": {
-          "type": "string"
-        },
-        "path": {
-          "type": "string"
-        },
-        "adapter": {
-          "type": "string"
-        },
-        "created": {
-          "type": "string",
-          "format": "date"
-        },
-        "modified": {
-          "type": "string",
-          "format": "date"
-        },
-        "url": {
-          "type": "object",
-          "properties": {
-            "medium": {
-              "type": "string",
-              "format": "uri"
-            },
-            "small": {
-              "type": "string",
-              "format": "uri"
-            }
-          }
-        }
-      }
-    },
-    "ApiResponseHeader": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "code": {
-          "type": "integer"
-        },
-        "message": {
-          "type": "string"
-        },
-        "servertime": {
-          "type": "integer",
-          "format": "timestamp"
-        },
-        "status": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        },
-        "url": {
-          "type": "string",
-          "format": "url"
-        }
-      }
-    },
-    "ApiResponse": {
-      "type": "object",
-      "properties": {
-        "header": {
-          "type": "object",
-          "$ref": "#/definitions/ApiResponseHeader"
-        },
-        "body": {
-          "type": "array",
-          "items": {
-            "type": "object"
-          }
         }
       }
     }

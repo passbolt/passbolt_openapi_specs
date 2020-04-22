@@ -2,15 +2,9 @@ swagger: '2.0'
 info:
   description: |
     This document describes passbolt backend REST APIs. They work over HTTPS so they are language/framework agnostic. Clients can consume them in their language of choice using the HTTPS protocol.
-<<<<<<< HEAD
   version: "2.8.3"
   title: "passbolt API Reference"
   termsOfService: "https://www.passbolt.com/terms"
-=======
-  version: 2.8.3
-  title: passbolt API Reference
-  termsOfService: 'https://www.passbolt.com/terms'
->>>>>>> develop
   contact:
     email: contact@passbolt.com
   license:
@@ -197,7 +191,7 @@ paths:
             Authentication failure.
             --
             When the user making the request is not authenticated
-      
+
     post:
       operationId: createPassword
       tags:
@@ -254,7 +248,7 @@ paths:
           description: |
             Forbidden
             --
-      
+
   '/resources/{resourceId}.json':
     get:
       operationId: getPassword
@@ -303,14 +297,14 @@ paths:
             When either of the following is true
              - A password with the given `resourceId` does not exist.
              - The current user does not have `READ` permission on the password
-      
+
     put:
       tags:
         - Resource
       summary: Update an existing password
       description: |
         Updates the specified password by setting the values of the parameters passed. Any parameters not provided will be left unchanged.  
-          
+
           This request accepts mostly the same arguments as the `Password` creation call.
       operationId: updatePassword
       consumes:
@@ -374,7 +368,7 @@ paths:
             When either of the following is true
              - A password with the given `resourceId` does not exist
              - The current user does not have sufficient permission on the password
-      
+
     delete:
       operationId: deletePassword
       tags:
@@ -423,7 +417,7 @@ paths:
             Server Error
             --
             if the resource could not be deleted for other reasons
-      
+
   /users.json:
     get:
       description: Returns a list of your users. The users are returned sorted alphabetically by their name.
@@ -494,7 +488,7 @@ paths:
             Authentication failure.
             --
             When the user making the request is not authenticated
-      
+
     post:
       operationId: createUser
       tags:
@@ -546,7 +540,7 @@ paths:
           description: |
             Forbidden
             --
-      
+
   '/users/{userId}.json':
     get:
       operationId: getUser
@@ -595,14 +589,14 @@ paths:
             When either of the following is true
              - A user with the given `userId` does not exist.
              - The current user does not have `READ` permission on the user
-      
+
     put:
       tags:
         - User
       summary: Update an existing user
       description: |
         Updates the specified user by setting the values of the parameters passed. Any parameters not provided will be left unchanged.  
-          
+
           This request accepts mostly the same arguments as the `User` creation call.
       operationId: updateUser
       consumes:
@@ -666,7 +660,7 @@ paths:
             When either of the following is true
              - A user with the given `userId` does not exist
              - The current user does not have sufficient permission on the user
-      
+
     delete:
       operationId: deleteUser
       tags:
@@ -715,7 +709,7 @@ paths:
             Server Error
             --
             if the user could not be deleted for other reasons
-      
+
   '/users/{userId}/dry-run':
     delete:
       tags:
@@ -754,7 +748,7 @@ paths:
             Bad Request
             --
             Some of the validation checks failed. The User can not be deleted safely.
-      
+
   /groups.json:
     get:
       description: Returns a list of your groups. The groups are returned sorted alphabetically by their name.
@@ -821,7 +815,7 @@ paths:
             Authentication failure.
             --
             When the group making the request is not authenticated
-      
+
     post:
       operationId: createGroup
       tags:
@@ -872,7 +866,7 @@ paths:
           description: |
             Forbidden
             --
-      
+
   '/groups/{groupId}.json':
     get:
       operationId: getGroup
@@ -921,14 +915,14 @@ paths:
             When either of the following is true
              - A group with the given `groupId` does not exist.
              - The current group does not have `READ` permission on the group
-     
+
     put:
       tags:
         - Group
       summary: Update an existing group
       description: |
         Updates the specified group by setting the values of the parameters passed. Any parameters not provided will be left unchanged.  
-          
+
           This request accepts mostly the same arguments as the `Group` creation call.
       operationId: updateGroup
       consumes:
@@ -1041,7 +1035,7 @@ paths:
             Server Error
             --
             if the group could not be deleted for other reasons
-      
+
   '/groups/{groupId}/dry-run':
     put:
       tags:
@@ -1086,7 +1080,7 @@ paths:
             --
             * No Group found for the given `groupId` or
             * The Group has been deleted.
-      
+
     delete:
       tags:
         - Group
@@ -1118,7 +1112,7 @@ paths:
             Bad Request
             --
             The Group is the sole owner of a Resource and hence can not be deleted.
-      
+
   /share/search-aros.json:
     get:
       tags:
@@ -1238,7 +1232,7 @@ paths:
              - A resource with the given `resourceId` does not exist
              - The resource is soft deleted
              - The user does not have access to the resource
-      
+
   '/share/resource/{resourceId}.json':
     put:
       tags:
@@ -1284,7 +1278,7 @@ paths:
              - A resource with the given `resourceId` does not exist
              - The resource is soft deleted
              - The user does not have access to the resource
-      
+
   '/permissions/resource/{resourceId}.json':
     get:
       tags:
@@ -1482,7 +1476,7 @@ paths:
             Not Found
             ---
             If a resource with the given `resourceId` is not found
-      
+
     post:
       tags:
         - Comment
@@ -1532,7 +1526,7 @@ paths:
             Not Found
             ---
             If a resource with the given `resourceId` is not found
-      
+
   '/comments/{commentId}.json':
     put:
       tags:
@@ -1583,7 +1577,7 @@ paths:
             Not Found
             ---
             If a resource with the given `resourceId` is not found
-      
+
     delete:
       tags:
         - Comment
@@ -1624,7 +1618,7 @@ paths:
             ---
             If a resource with the given `resourceId` is not found
             If the current user does not have enough permission to delete the comment
-      
+
   /gpgkeys.json:
     get:
       tags:
@@ -1651,7 +1645,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/definitions/GpgKey'
-      
+
   '/gpgkeys/{keyId}.json':
     get:
       tags:
@@ -1692,7 +1686,7 @@ paths:
             Not Found
             ---
             If a GPGKey with the given `keyId` could not be found
-      
+
   '/secrets/resource/{resourceId}.json':
     get:
       tags:
@@ -1743,7 +1737,7 @@ paths:
                   user_id:
                     type: string
                     format: uuid
-     
+
   /settings.json:
     get:
       tags:
@@ -1803,7 +1797,7 @@ paths:
                           - pro
                       plugins:
                         type: object
-      
+
   /roles.json:
     get:
       tags:
@@ -1829,7 +1823,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/definitions/Role'
-      
+
   /healthcheck.json:
     get:
       tags:
@@ -1869,7 +1863,7 @@ paths:
                     type: object
                   gpg:
                     type: object
-      
+
   /healthcheck/status.json:
     get:
       tags:
@@ -1897,8 +1891,50 @@ paths:
                 enum:
                   - OK
 
-  
+
 definitions:
+  ApiResponseHeader:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+      code:
+        type: integer
+      message:
+        type: string
+      servertime:
+        type: integer
+        format: timestamp
+      status:
+        type: string
+      title:
+        type: string
+      url:
+        type: string
+        format: url
+  ApiResponse:
+    type: object
+    properties:
+      header:
+        type: object
+        $ref: '#/definitions/ApiResponseHeader'
+      body:
+        type: array
+        items:
+          type: object
+  Avatar:
+    type: object
+    properties:
+      url:
+        type: object
+        properties:
+          medium:
+            type: string
+            format: uri
+          small:
+            type: string
+            format: uri
   Comment:
     type: object
     properties:
@@ -1956,6 +1992,48 @@ definitions:
       user_id:
         type: string
         format: uuid
+  GpgKey:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+      user_id:
+        type: string
+        format: uuid
+      armored_key:
+        type: string
+      bits:
+        type: number
+      uid:
+        type: string
+      key_id:
+        type: string
+      fingerprint:
+        type: string
+      type:
+        type: string
+        enum:
+          - RSA
+          - ELGAMAL
+          - DSA
+          - ECC
+          - ECDSA
+          - DH
+      expires:
+        type: string
+        format: date
+      key_created:
+        type: string
+        format: date
+      deleted:
+        type: boolean
+      created:
+        type: string
+        format: date
+      modified:
+        type: string
+        format: date
   Group:
     type: object
     properties:
@@ -2024,13 +2102,28 @@ definitions:
         format: date
       type:
         type: integer
+  Profile:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+      user_id:
+        type: string
+        format: uuid
+      first_name:
+        type: string
+        maxLength: 255
+      last_name:
+        type: string
+        maxLength: 255
+      created:
+        type: string
+        format: date
+      modified:
+        type: string
+        format: date
   Resource:
-    description: |
-      `Resource` objects allow you to perform recurring charges, and to track multiple charges, that are associated with the same customer.
-
-      The API allows you to create, delete, and update your customers. 
-
-      You can retrieve individual customers as well as a list of all your customers.
     type: object
     properties:
       id:
@@ -2073,6 +2166,22 @@ definitions:
         format: url
       username:
         type: string
+  Role:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+      name:
+        type: string
+      description:
+        type: string
+      created:
+        type: string
+        format: date
+      modified:
+        type: string
+        format: date
   User:
     type: object
     properties:
@@ -2133,157 +2242,4 @@ definitions:
       last_logged_in:
         type: string
         format: date
-  GpgKey:
-    type: object
-    properties:
-      id:
-        type: string
-        format: uuid
-      user_id:
-        type: string
-        format: uuid
-      armored_key:
-        type: string
-      bits:
-        type: number
-      uid:
-        type: string
-      key_id:
-        type: string
-      fingerprint:
-        type: string
-      type:
-        type: string
-        enum:
-          - RSA
-      expires:
-        type: string
-        format: date
-      key_created:
-        type: string
-        format: date
-      deleted:
-        type: string
-        format: date
-      created:
-        type: string
-        format: date
-      modified:
-        type: string
-        format: date
-  Role:
-    type: object
-    properties:
-      id:
-        type: string
-        format: uuid
-      name:
-        type: string
-      description:
-        type: string
-      created:
-        type: string
-        format: date
-      modified:
-        type: string
-        format: date
-  Profile:
-    type: object
-    properties:
-      id:
-        type: string
-        format: uuid
-      user_id:
-        type: string
-        format: uuid
-      first_name:
-        type: string
-        maxLength: 255
-      last_name:
-        type: string
-        maxLength: 255
-      created:
-        type: string
-        format: date
-      modified:
-        type: string
-        format: date
-  Avatar:
-    type: object
-    properties:
-      id:
-        type: string
-        format: uuid
-      user_id:
-        type: string
-        format: uuid
-      foreign_key:
-        type: string
-        format: uuid
-      model:
-        type: string
-        enum:
-          - Avatar
-      filename:
-        type: string
-      filesize:
-        type: number
-      mime_type:
-        type: string
-        enum:
-          - image/jpeg'
-          - image/png
-          - image/gif
-      extension:
-        type: string
-      hash:
-        type: string
-      path:
-        type: string
-      adapter:
-        type: string
-      created:
-        type: string
-        format: date
-      modified:
-        type: string
-        format: date
-      url:
-        type: object
-        properties:
-          medium:
-            type: string
-            format: uri
-          small:
-            type: string
-            format: uri
-  ApiResponseHeader:
-    type: object
-    properties:
-      id:
-        type: string
-        format: uuid
-      code:
-        type: integer
-      message:
-        type: string
-      servertime:
-        type: integer
-        format: timestamp
-      status:
-        type: string
-      title:
-        type: string
-      url:
-        type: string
-        format: url
-  ApiResponse:
-    type: object
-    properties:
-      header:
-        type: object
-        $ref: '#/definitions/ApiResponseHeader'
-      body:
-        type: array
-        items:
-          type: object
+
