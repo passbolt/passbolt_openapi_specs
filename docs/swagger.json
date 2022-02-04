@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "description": "This document describes passbolt backend REST APIs. They work over HTTPS so they are language/framework agnostic. Clients can consume them in their language of choice using the HTTPS protocol.\n",
-    "version": "2.7.1",
+    "version": "2.8.3",
     "title": "passbolt API Reference",
     "termsOfService": "https://www.passbolt.com/terms",
     "contact": {
@@ -251,14 +251,7 @@
           "403": {
             "description": "Authentication failure.\n--\nWhen the user making the request is not authenticated\n"
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "read:resource"
-            ]
-          }
-        ]
+        }
       },
       "post": {
         "operationId": "createPassword",
@@ -332,14 +325,7 @@
           "403": {
             "description": "Forbidden\n--\n"
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "write:resource"
-            ]
-          }
-        ]
+        }
       }
     },
     "/resources/{resourceId}.json": {
@@ -395,14 +381,7 @@
           "404": {
             "description": "Not Found\n--\nWhen either of the following is true\n - A password with the given `resourceId` does not exist.\n - The current user does not have `READ` permission on the password\n"
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "write:resource"
-            ]
-          }
-        ]
+        }
       },
       "put": {
         "tags": [
@@ -485,15 +464,7 @@
           "404": {
             "description": "Not Found\n--\nWhen either of the following is true\n - A password with the given `resourceId` does not exist\n - The current user does not have sufficient permission on the password\n"
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "write:resource",
-              "read:resource"
-            ]
-          }
-        ]
+        }
       },
       "delete": {
         "operationId": "deletePassword",
@@ -539,14 +510,7 @@
           "500": {
             "description": "Server Error\n--\nif the resource could not be deleted for other reasons\n"
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "read:resource"
-            ]
-          }
-        ]
+        }
       }
     },
     "/users.json": {
@@ -641,14 +605,7 @@
           "403": {
             "description": "Authentication failure.\n--\nWhen the user making the request is not authenticated\n"
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "read:user"
-            ]
-          }
-        ]
+        }
       },
       "post": {
         "operationId": "createUser",
@@ -713,14 +670,7 @@
           "403": {
             "description": "Forbidden\n--\n"
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "write:user"
-            ]
-          }
-        ]
+        }
       }
     },
     "/users/{userId}.json": {
@@ -776,14 +726,7 @@
           "404": {
             "description": "Not Found\n--\nWhen either of the following is true\n - A user with the given `userId` does not exist.\n - The current user does not have `READ` permission on the user\n"
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "write:user"
-            ]
-          }
-        ]
+        }
       },
       "put": {
         "tags": [
@@ -866,15 +809,7 @@
           "404": {
             "description": "Not Found\n--\nWhen either of the following is true\n - A user with the given `userId` does not exist\n - The current user does not have sufficient permission on the user\n"
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "write:user",
-              "read:user"
-            ]
-          }
-        ]
+        }
       },
       "delete": {
         "operationId": "deleteUser",
@@ -920,14 +855,7 @@
           "500": {
             "description": "Server Error\n--\nif the user could not be deleted for other reasons\n"
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "delete:user"
-            ]
-          }
-        ]
+        }
       }
     },
     "/users/{userId}/dry-run": {
@@ -965,14 +893,7 @@
           "400": {
             "description": "Bad Request\n--\nSome of the validation checks failed. The User can not be deleted safely.\n"
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "delete:user"
-            ]
-          }
-        ]
+        }
       }
     },
     "/groups.json": {
@@ -1063,14 +984,7 @@
           "403": {
             "description": "Authentication failure.\n--\nWhen the group making the request is not authenticated\n"
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "read:group"
-            ]
-          }
-        ]
+        }
       },
       "post": {
         "operationId": "createGroup",
@@ -1136,14 +1050,7 @@
           "403": {
             "description": "Forbidden\n--\n"
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "write:group"
-            ]
-          }
-        ]
+        }
       }
     },
     "/groups/{groupId}.json": {
@@ -1199,14 +1106,7 @@
           "404": {
             "description": "Not Found\n--\nWhen either of the following is true\n - A group with the given `groupId` does not exist.\n - The current group does not have `READ` permission on the group\n"
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "write:group"
-            ]
-          }
-        ]
+        }
       },
       "put": {
         "tags": [
@@ -1294,15 +1194,7 @@
           "404": {
             "description": "Not Found\n--\nWhen either of the following is true\n - A group with the given `groupId` does not exist\n - The current group does not have sufficient permission on the group\n"
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "write:group",
-              "read:group"
-            ]
-          }
-        ]
+        }
       },
       "delete": {
         "operationId": "deleteGroup",
@@ -1348,14 +1240,7 @@
           "500": {
             "description": "Server Error\n--\nif the group could not be deleted for other reasons\n"
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "delete:group"
-            ]
-          }
-        ]
+        }
       }
     },
     "/groups/{groupId}/dry-run": {
@@ -1399,14 +1284,7 @@
           "404": {
             "description": "Not Found\n--\n* No Group found for the given `groupId` or\n* The Group has been deleted.\n"
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "write:group"
-            ]
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
@@ -1442,14 +1320,7 @@
           "400": {
             "description": "Bad Request\n--\nThe Group is the sole owner of a Resource and hence can not be deleted.\n"
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "delete:group"
-            ]
-          }
-        ]
+        }
       }
     },
     "/share/search-aros.json": {
@@ -1608,14 +1479,7 @@
           "404": {
             "description": "Not Found\n--\nWhen either of the following is true\n - A resource with the given `resourceId` does not exist\n - The resource is soft deleted\n - The user does not have access to the resource\n"
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "share:resource"
-            ]
-          }
-        ]
+        }
       }
     },
     "/share/resource/{resourceId}.json": {
@@ -1663,14 +1527,7 @@
           "404": {
             "description": "Not Found\n--\nWhen either of the following is true\n - A resource with the given `resourceId` does not exist\n - The resource is soft deleted\n - The user does not have access to the resource\n"
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "share:resource"
-            ]
-          }
-        ]
+        }
       }
     },
     "/permissions/resource/{resourceId}.json": {
@@ -1931,14 +1788,7 @@
           "404": {
             "description": "Not Found\n---\nIf a resource with the given `resourceId` is not found\n"
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "read:comment"
-            ]
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
@@ -2003,14 +1853,7 @@
           "404": {
             "description": "Not Found\n---\nIf a resource with the given `resourceId` is not found\n"
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "write:comment"
-            ]
-          }
-        ]
+        }
       }
     },
     "/comments/{commentId}.json": {
@@ -2077,14 +1920,7 @@
           "404": {
             "description": "Not Found\n---\nIf a resource with the given `resourceId` is not found\n"
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "write:comment"
-            ]
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
@@ -2133,14 +1969,7 @@
           "404": {
             "description": "Not Found\n---\nIf a resource with the given `resourceId` is not found\nIf the current user does not have enough permission to delete the comment\n"
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "write:comment"
-            ]
-          }
-        ]
+        }
       }
     },
     "/gpgkeys.json": {
@@ -2180,14 +2009,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "read:gpgkey"
-            ]
-          }
-        ]
+        }
       }
     },
     "/gpgkeys/{keyId}.json": {
@@ -2238,14 +2060,7 @@
           "404": {
             "description": "Not Found\n---\nIf a GPGKey with the given `keyId` could not be found\n"
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "read:gpgkey"
-            ]
-          }
-        ]
+        }
       }
     },
     "/secrets/resource/{resourceId}.json": {
@@ -2317,14 +2132,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "read:secret"
-            ]
-          }
-        ]
+        }
       }
     },
     "/settings.json": {
@@ -2415,14 +2223,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "read:settings"
-            ]
-          }
-        ]
+        }
       }
     },
     "/roles.json": {
@@ -2461,14 +2262,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "read:role"
-            ]
-          }
-        ]
+        }
       }
     },
     "/healthcheck.json": {
@@ -2528,14 +2322,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "read:healthcheck"
-            ]
-          }
-        ]
+        }
       }
     },
     "/healthcheck/status.json": {
@@ -2575,43 +2362,73 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "passbolt_auth": [
-              "read:healthcheck"
-            ]
-          }
-        ]
-      }
-    }
-  },
-  "securityDefinitions": {
-    "passbolt_auth": {
-      "type": "oauth2",
-      "authorizationUrl": "https://api.passbolt.com/oauth/dialog",
-      "flow": "implicit",
-      "scopes": {
-        "write:resource": "modify password in your account",
-        "read:resource": "read your passwords",
-        "share:resource": "share your passwords",
-        "write:user": "modify users",
-        "read:user": "read users",
-        "delete:user": "delete users",
-        "read:group": "read groups",
-        "write:group": "write groups",
-        "delete:group": "delete groups",
-        "read:comment": "read your comments",
-        "write:comment": "write your comments",
-        "read:gpgkey": "read your gpg keys",
-        "read:secret": "read your resource secret",
-        "read:settings": "read your settings",
-        "read:role": "read your roles",
-        "read:healthcheck": "read your health check status"
+        }
       }
     }
   },
   "definitions": {
+    "ApiResponseHeader": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "servertime": {
+          "type": "integer",
+          "format": "timestamp"
+        },
+        "status": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "url"
+        }
+      }
+    },
+    "ApiResponse": {
+      "type": "object",
+      "properties": {
+        "header": {
+          "type": "object",
+          "$ref": "#/definitions/ApiResponseHeader"
+        },
+        "body": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "Avatar": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "object",
+          "properties": {
+            "medium": {
+              "type": "string",
+              "format": "uri"
+            },
+            "small": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        }
+      }
+    },
     "Comment": {
       "type": "object",
       "properties": {
@@ -2689,6 +2506,64 @@
         "user_id": {
           "type": "string",
           "format": "uuid"
+        }
+      }
+    },
+    "GpgKey": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "user_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "armored_key": {
+          "type": "string"
+        },
+        "bits": {
+          "type": "number"
+        },
+        "uid": {
+          "type": "string"
+        },
+        "key_id": {
+          "type": "string"
+        },
+        "fingerprint": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "RSA",
+            "ELGAMAL",
+            "DSA",
+            "ECC",
+            "ECDSA",
+            "DH"
+          ]
+        },
+        "expires": {
+          "type": "string",
+          "format": "date"
+        },
+        "key_created": {
+          "type": "string",
+          "format": "date"
+        },
+        "deleted": {
+          "type": "boolean"
+        },
+        "created": {
+          "type": "string",
+          "format": "date"
+        },
+        "modified": {
+          "type": "string",
+          "format": "date"
         }
       }
     },
@@ -2788,8 +2663,36 @@
         }
       }
     },
+    "Profile": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "user_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "first_name": {
+          "type": "string",
+          "maxLength": 255
+        },
+        "last_name": {
+          "type": "string",
+          "maxLength": 255
+        },
+        "created": {
+          "type": "string",
+          "format": "date"
+        },
+        "modified": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
     "Resource": {
-      "description": "`Resource` objects allow you to perform recurring charges, and to track multiple charges, that are associated with the same customer.\n\nThe API allows you to create, delete, and update your customers. \n\nYou can retrieve individual customers as well as a list of all your customers.\n",
       "type": "object",
       "properties": {
         "id": {
@@ -2842,6 +2745,29 @@
         },
         "username": {
           "type": "string"
+        }
+      }
+    },
+    "Role": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date"
+        },
+        "modified": {
+          "type": "string",
+          "format": "date"
         }
       }
     },
@@ -2927,226 +2853,6 @@
         "last_logged_in": {
           "type": "string",
           "format": "date"
-        }
-      }
-    },
-    "GpgKey": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "user_id": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "armored_key": {
-          "type": "string"
-        },
-        "bits": {
-          "type": "number"
-        },
-        "uid": {
-          "type": "string"
-        },
-        "key_id": {
-          "type": "string"
-        },
-        "fingerprint": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string",
-          "enum": [
-            "RSA"
-          ]
-        },
-        "expires": {
-          "type": "string",
-          "format": "date"
-        },
-        "key_created": {
-          "type": "string",
-          "format": "date"
-        },
-        "deleted": {
-          "type": "string",
-          "format": "date"
-        },
-        "created": {
-          "type": "string",
-          "format": "date"
-        },
-        "modified": {
-          "type": "string",
-          "format": "date"
-        }
-      }
-    },
-    "Role": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "name": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "created": {
-          "type": "string",
-          "format": "date"
-        },
-        "modified": {
-          "type": "string",
-          "format": "date"
-        }
-      }
-    },
-    "Profile": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "user_id": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "first_name": {
-          "type": "string",
-          "maxLength": 255
-        },
-        "last_name": {
-          "type": "string",
-          "maxLength": 255
-        },
-        "created": {
-          "type": "string",
-          "format": "date"
-        },
-        "modified": {
-          "type": "string",
-          "format": "date"
-        }
-      }
-    },
-    "Avatar": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "user_id": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "foreign_key": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "model": {
-          "type": "string",
-          "enum": [
-            "Avatar"
-          ]
-        },
-        "filename": {
-          "type": "string"
-        },
-        "filesize": {
-          "type": "number"
-        },
-        "mime_type": {
-          "type": "string",
-          "enum": [
-            "image/jpeg'",
-            "image/png",
-            "image/gif"
-          ]
-        },
-        "extension": {
-          "type": "string"
-        },
-        "hash": {
-          "type": "string"
-        },
-        "path": {
-          "type": "string"
-        },
-        "adapter": {
-          "type": "string"
-        },
-        "created": {
-          "type": "string",
-          "format": "date"
-        },
-        "modified": {
-          "type": "string",
-          "format": "date"
-        },
-        "url": {
-          "type": "object",
-          "properties": {
-            "medium": {
-              "type": "string",
-              "format": "uri"
-            },
-            "small": {
-              "type": "string",
-              "format": "uri"
-            }
-          }
-        }
-      }
-    },
-    "ApiResponseHeader": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "code": {
-          "type": "integer"
-        },
-        "message": {
-          "type": "string"
-        },
-        "servertime": {
-          "type": "integer",
-          "format": "timestamp"
-        },
-        "status": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        },
-        "url": {
-          "type": "string",
-          "format": "url"
-        }
-      }
-    },
-    "ApiResponse": {
-      "type": "object",
-      "properties": {
-        "header": {
-          "type": "object",
-          "$ref": "#/definitions/ApiResponseHeader"
-        },
-        "body": {
-          "type": "array",
-          "items": {
-            "type": "object"
-          }
         }
       }
     }
