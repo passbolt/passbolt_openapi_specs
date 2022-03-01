@@ -1,14 +1,19 @@
 {
   "name": "passbolt_openapi_specs",
   "version": "1.0.0",
-  "description": "",
+  "description": "Passbolt Open API Specs (with Swagger UI)",
   "main": "index.js",
-  "directories": {
-    "doc": "docs"
+  "author": "Passbolt SA",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/passbolt/passbolt_openapi_specs.git"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "bugs": {
+    "url": "https://github.com/passbolt/passbolt_openapi_specs/issues"
   },
-  "author": "",
-  "license": "Apache-2.0"
+  "homepage": "https://help.passbolt.com/api",
+  "dependencies": {
+    "swagger-ui-dist": "^4.5.2"
+  }
 }
