@@ -14,6 +14,6 @@
   },
   "homepage": "https://help.passbolt.com/api",
   "dependencies": {
-    "swagger-ui-dist": "^4.5.2"
+    "swagger-ui-dist": "^4.19.1"
   }
 }
